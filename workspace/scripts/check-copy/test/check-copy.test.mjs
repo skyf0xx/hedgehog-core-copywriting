@@ -12,6 +12,13 @@ test('fails on text stacked with banned AI-tell vocabulary and phrasing', async 
   assert.ok(report.violations.some((v) => v.rule === 'tells/hedge-stack'));
 });
 
+test('flags a because-not-because negation contrast', async () => {
+  const text = `A draft ships because a script checked it and exited 0, not because an agent read it and judged it clean.`;
+  const report = await checkCopy(text);
+  assert.equal(report.pass, false);
+  assert.ok(report.violations.some((v) => v.rule === 'tells/negation-formula'));
+});
+
 test('passes on plain, varied, concrete prose', async () => {
   const text = `Every handoff between Slack and your ticket tracker drops something. A decision made in chat never makes it into the ticket. We built a single feed that both tools write to. Comments sync both ways.`;
   const report = await checkCopy(text);

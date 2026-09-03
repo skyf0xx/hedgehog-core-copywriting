@@ -57,11 +57,3 @@ runner) against both intentionally AI-sounding and genuinely clean
 sample text, confirming the gate actually discriminates rather than
 rubber-stamping.
 
-## Status
-
-Early and standalone. Ships one fixed, general-audience rule set —
-no per-project voice profile yet, and no wiring into any other core
-(e.g. `landing-page`'s own copy skill keeps its existing prose
-self-check for now). Both are deliberate: prove the gate's rule set out
-here first before generalizing it or asking another core to depend on
-it.

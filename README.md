@@ -4,13 +4,13 @@ Write better copy, faster. Ask for an article, email, or landing page — it dra
 
 ## Get started
 
-Run this command inside a folder (a git repo):
+Run this command from wherever you are:
 
 ```
 npx @skyf0xx/hedgehog init --copywriting
 ```
 
-That's it. From there, just ask for what you want written — the finished piece lands as a plain file you can open.
+That's it. Answer a few quick questions about what you want written, and the finished piece lands as a plain file in the current folder. Nothing else is left behind — just your article, email, or landing page, ready to use.
 
 ## What it does
 

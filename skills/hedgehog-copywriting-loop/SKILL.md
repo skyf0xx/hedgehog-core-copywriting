@@ -13,6 +13,52 @@ returns a structured violation report. The loop exists because an
 agent's own read of its draft ("this looks clean") is not a gate; a
 process exiting 0 or 1 is.
 
+## Phase -1: ephemeral scratch setup (before Phase 0)
+
+Every invocation of this loop is ephemeral: fetch fresh into a hidden
+temp directory, run the whole loop there, copy only the finished piece
+back to wherever the user actually started, then discard the temp
+directory. There is no persistent, visible install of this core in the
+old sense — nothing under this core lives in the user's project
+directory except the one file the courtesy export drops there. Run
+these steps in order, before anything else in the session:
+
+1. **Capture the user's real starting directory first, before anything
+   else happens**: `ORIGDIR="$PWD"`. This ordering matters because
+   `$ORIGDIR` is the one piece of state this loop cannot reconstruct
+   later — everything else the loop creates lives inside the temp
+   directory and is fully discardable, but if `$ORIGDIR` isn't captured
+   before any `cd` happens, there is no way to know where the finished
+   piece should ultimately land.
+2. **Create the hidden scratch directory**: `TMPDIR=$(mktemp -d)`.
+3. **The invariant**: every `hedgehog` command for the rest of this
+   loop, and every file this loop writes (`.hedgehog/copy/`,
+   `scripts/check-copy/`, the BMAD archive under `.hedgehog/BMAD/`,
+   `core.yaml`), happens inside `$TMPDIR`, never `$ORIGDIR`. Every
+   `hedgehog` invocation is wrapped as a subshell, not a bare `cd`:
+   ```
+   (cd "$TMPDIR" && HEDGEHOG_CORE_NO_CACHE=1 HEDGEHOG_NO_COMMUNITY_PROMPT=1 hedgehog ...)
+   ```
+   A subshell guarantees a single missed wrapper on some later command
+   doesn't silently leave things pointed at the wrong directory, since
+   each Bash tool call is not guaranteed to persist shell state (cwd)
+   from the previous one anyway — a bare `cd` would only be as reliable
+   as remembering it happened.
+4. **`hedgehog init --copywriting` itself is run the same wrapped way**,
+   targeting `$TMPDIR` from `$ORIGDIR`:
+   ```
+   (cd "$TMPDIR" && HEDGEHOG_CORE_NO_CACHE=1 npx @skyf0xx/hedgehog init --copywriting)
+   ```
+   This is what triggers the CLI's existing self-init-git-if-needed
+   behavior inside the fresh temp directory — `$TMPDIR` starts empty, so
+   `init` initializes a git repo there itself, requiring no special
+   handling from this loop.
+
+Every relative path named anywhere else in this document —
+`.hedgehog/copy/...`, `scripts/check-copy/...`, `core.yaml`,
+`.hedgehog/BMAD/...` — is relative to `$TMPDIR`, per the invariant
+above; nothing downstream re-states this.
+
 ## Planning intake (Phase 0, before any build layer)
 
 Run once. This core has no bootstrap step: `hedgehog init --copywriting`
@@ -132,16 +178,30 @@ Add-ons decision on full-stack-app).
    (`feat(copy): draft`). On failure the task moves to `blocked`; go
    back to step 2, don't hand-commit around a block.
    1. **After verify passes and the layer's commit is written, drop a
-      courtesy export at the project root**: copy the just-verified
+      courtesy export at `$ORIGDIR`**: copy the just-verified
       `.hedgehog/copy/final.md` to a plain file named from a kebab-case
       slug of `00-brief.md`'s "what's being written" (fallback to
       `article.md` if the brief text doesn't yield a clean slug), e.g.
-      `product-launch-announcement.md`. If that filename already exists
-      at the root, append `-2`, `-3`, … until it doesn't — never
-      overwrite an earlier piece's export. This is a courtesy copy only:
-      `.hedgehog/copy/final.md` remains the canonical, gated artifact
-      that verify and any later steps reference; nothing about the
-      layer chain or the gate itself changes because of this.
+      ```
+      cp "$TMPDIR/.hedgehog/copy/final.md" "$ORIGDIR/product-launch-announcement.md"
+      ```
+      If that filename already exists at `$ORIGDIR`, append `-2`, `-3`,
+      … until it doesn't — never overwrite an earlier piece's export.
+      This is a courtesy copy only: `.hedgehog/copy/final.md` inside
+      `$TMPDIR` remains the canonical, gated artifact that verify and
+      any later steps reference; nothing about the layer chain or the
+      gate itself changes because of this. This single `cp` is the
+      *only* interaction this loop ever has with `$ORIGDIR` — never a
+      `cd` into it, never any `hedgehog` command run there — which is
+      what guarantees this loop cannot interfere with whatever project
+      (if any) the user happened to be sitting inside of when they
+      started.
+   2. **Once the export is confirmed present at `$ORIGDIR`** (e.g. after
+      the `cp` above completes without error), delete the temp
+      directory: `rm -rf "$TMPDIR"`. This is guarded on the copy having
+      actually succeeded — if the `cp` fails for any reason, `$TMPDIR`
+      must be left in place rather than deleted, since it would
+      otherwise be the only remaining copy of the finished work.
 
 ## Rules
 

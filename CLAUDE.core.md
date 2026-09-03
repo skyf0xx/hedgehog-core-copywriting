@@ -60,6 +60,12 @@ warning or error silently on a per-draft basis.
 
 ### Layout
 
+Everything below lives inside `$TMPDIR`, a temporary directory created
+fresh per invocation and deleted once the loop finishes — see
+`hedgehog-copywriting-loop`'s "Phase -1: ephemeral scratch setup." None
+of it is visible in, or written to, the directory the user actually
+started in.
+
 ```text
 scripts/check-copy/       the gate: index.mjs (CLI entry), rules/tells.mjs,
                            rules/prose.mjs, report.mjs (zod-validated output shape)
@@ -69,12 +75,15 @@ scripts/check-copy/       the gate: index.mjs (CLI entry), rules/tells.mjs,
     final.md                the draft under iteration, gated by check-copy
   hedgehog.db               the build graph — the copy intent, its two
                              compiled layers, verifications, committed to git
-<slugged-title>.md          courtesy export at the project root, dropped by
-                             the loop after draft verify passes — a plain-file
-                             copy of final.md for a non-technical writer to
-                             find; the gated artifact stays
-                             .hedgehog/copy/final.md
 ```
+
+The one exception is `$ORIGDIR/<slugged-title>.md` — the courtesy
+export, dropped outside `$TMPDIR` entirely, at the directory the user
+was actually in when the loop started. It's a plain-file copy of
+`final.md`, written once draft verify passes, for a non-technical writer
+to find without knowing anything above exists. The gated artifact stays
+`.hedgehog/copy/final.md` inside `$TMPDIR`; this copy is never read back
+by anything in the loop.
 
 ### Core rule
 

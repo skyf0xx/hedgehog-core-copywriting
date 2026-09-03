@@ -20,6 +20,9 @@ A piece of copy ships because a script exited 0, the same trust model
   prose-quality rule set (passive voice, weasel words, readability,
   sentence-length variance, nominalization density), and `report.mjs`
   is the zod-validated output shape every rule reports through.
+- `workspace/core.yaml` — the two-layer chain (`brief` → `draft`) a
+  Hedgehog install compiles into its build graph, copied to the root of
+  every project this core installs into alongside `scripts/check-copy/`.
 - `agents/copy-writer.md` — drafts copy and iterates it against the
   gate until it passes or a real conflict with the brief surfaces.
 - `skills/hedgehog-copywriting-loop/` — the operating loop: brief
@@ -30,8 +33,6 @@ A piece of copy ships because a script exited 0, the same trust model
 - `CLAUDE.core.md` — fills a Hedgehog project's root `CLAUDE.md`
   `{{CORE_SECTION}}` placeholder for this core.
 - `hedgehog-core.yaml` — this package's manifest.
-- `core.yaml` — the two-layer chain (`brief` → `draft`) a Hedgehog
-  install compiles into its build graph.
 
 ## Running the gate directly
 

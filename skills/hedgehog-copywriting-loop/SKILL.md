@@ -39,7 +39,13 @@ Add-ons decision on full-stack-app).
    day-to-day loop reads it live after this step mines it once. There
    is no reduced or copy-specific shelf: the full sequence runs even
    though `bmad-ux`'s design-handoff output isn't this core's primary
-   input — `bmad-prd` and `bmad-prfaq` are.
+   input — `bmad-prd` and `bmad-prfaq` are. `bmad-brainstorming`'s
+   Ideate-for-me mode defaults to auto-generating an HTML keepsake —
+   unwanted work on a core whose deliverables are plain prose. A project
+   that wants brainstorming sessions to stay markdown-only can set
+   `keepsake_format = "markdown-only"` in
+   `_bmad/custom/bmad-brainstorming.toml`; this core doesn't set it by
+   default, since some copywriting projects do want the visual keepsake.
 2. **Mine a draft brief** from `.hedgehog/BMAD/`: what's being written
    (the concrete piece — a landing page section, a product announcement,
    a UI microcopy string, docs prose), the audience, and the register to

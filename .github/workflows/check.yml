@@ -1,0 +1,36 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+# The read-only token and --ignore-scripts below are what make it safe to
+# approve this workflow on a fork's pull request: the run gets a
+# disposable runner, no repository write access and no secrets, and a
+# contributor's package lifecycle scripts never execute. Keep it on
+# `pull_request` — `pull_request_target` would hand the fork's code a
+# token with write scope.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - run: npm install --ignore-scripts --no-audit --no-fund
+
+      - run: npm pack --dry-run
+
+      - run: cd workspace/scripts/check-copy && npm install --no-audit --no-fund
+
+      - run: cd workspace/scripts/check-copy && npm test

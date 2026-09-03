@@ -1,0 +1,71 @@
+name: PR Risk Labelling
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  path-based:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/labeler@v7
+        with:
+          configuration-path: .github/labeler.yml
+          sync-labels: false
+
+  size:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const changed = pr.additions + pr.deletions;
+            const files = pr.changed_files;
+
+            const labels = [];
+            if (files > 50 || changed > 1000) {
+              labels.push("risk:large");
+            }
+
+            let sizeLabel;
+            if (changed < 10) sizeLabel = "size:xs";
+            else if (changed < 100) sizeLabel = "size:s";
+            else if (changed < 500) sizeLabel = "size:m";
+            else if (changed < 1000) sizeLabel = "size:l";
+            else sizeLabel = "size:xl";
+            labels.push(sizeLabel);
+
+            const sizeLabels = ["size:xs", "size:s", "size:m", "size:l", "size:xl"];
+            const { data: existing } = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+            });
+            const toRemove = existing
+              .map((l) => l.name)
+              .filter((n) => sizeLabels.includes(n) && n !== sizeLabel);
+            for (const name of toRemove) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                name,
+              });
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              labels,
+            });

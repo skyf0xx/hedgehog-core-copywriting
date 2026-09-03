@@ -1,0 +1,30 @@
+# Path-based rules for .github/workflows/pr-risk.yml (actions/labeler).
+
+"risk:dependencies":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "package.json"
+          - "**/package.json"
+          - "package-lock.json"
+          - "**/package-lock.json"
+          - ".npmrc"
+          - ".nvmrc"
+
+"risk:agents":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "agents/**"
+          - "skills/**"
+          - "CLAUDE.core.md"
+
+"risk:ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/actions/**"
+
+"risk:architecture":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "core.yaml"
+          - "hedgehog-core.yaml"

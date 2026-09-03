@@ -45,6 +45,7 @@ const RULE_OF_THREE = /\b(\w+),\s+(\w+),\s+(?:and|or)\s+(\w+)\b/gi;
 const TITLE_CASE_HEADER = /^#{1,6}\s+([A-Z][a-z]*(\s+[A-Z][a-z]*){2,})$/gm;
 const EM_DASH = /—/g;
 const NEGATION_FORMULA = /\b(?:is|are|it'?s)\s+not\s+(?:just|only)\s+[^.;]{2,60}[,—-]\s*(?:it'?s|they'?re)\s+/gi;
+const NEGATION_CONTRAST = /\b(\w+)\s+[^.;,]{2,60},\s+(?:and\s+)?not\s+\1\s+[^.;]{2,60}/gi;
 const HEDGE_STACK = /\b(could|may|might)\s+(potentially|possibly|eventually|ultimately)\b/gi;
 const COPULA_AVOIDANCE = /\b(serves as|stands as|marks a|functions as|represents a)\b/gi;
 
@@ -93,6 +94,7 @@ export function checkTells(text, { wordCount }) {
 
   for (const [re, rule, message] of [
     [NEGATION_FORMULA, 'tells/negation-formula', 'Negation formula ("it\'s not X, it\'s Y") — state the positive claim directly'],
+    [NEGATION_CONTRAST, 'tells/negation-formula', 'Negation contrast ("X because Y, not because Z") — state the positive claim directly'],
     [HEDGE_STACK, 'tells/hedge-stack', 'Stacked hedge ("could potentially", "may eventually") — pick one claim and state it'],
     [COPULA_AVOIDANCE, 'tells/copula-avoidance', 'Copula avoidance — plain "is/are" reads clearer than dressed-up substitutes'],
   ]) {

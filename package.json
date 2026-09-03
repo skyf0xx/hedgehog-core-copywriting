@@ -1,0 +1,36 @@
+{
+  "name": "@skyf0xx/hedgehog-core-copywriting",
+  "version": "0.1.0",
+  "description": "Hedgehog's copywriting core: a mechanical checkCopy() gate against AI-tell and prose-quality contracts, the tells-detector and prose-quality skills that define them, and the copy-writer loop that drafts against the gate until it passes.",
+  "type": "module",
+  "scripts": {
+    "release": "npm version patch -m \"chore: bump version to %s\"",
+    "test": "npm --prefix scripts/check-copy test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skyf0xx/hedgehog-core-copywriting.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "scripts",
+    "agents",
+    "skills",
+    "CLAUDE.core.md",
+    "hedgehog-core.yaml",
+    "!scripts/check-copy/node_modules/**"
+  ],
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "keywords": [
+    "hedgehog-core",
+    "hedgehog",
+    "claude-code",
+    "copywriting",
+    "prose-linting"
+  ],
+  "license": "MIT"
+}

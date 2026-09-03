@@ -1,0 +1,30 @@
+{
+  "name": "check-copy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mechanical checkCopy() gate: AI-tell and prose-quality contracts run as deterministic code, not LLM self-grading.",
+  "bin": {
+    "check-copy": "./index.mjs"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.mjs\""
+  },
+  "dependencies": {
+    "flesch": "^2.0.1",
+    "flesch-kincaid": "^2.0.1",
+    "nlcst-to-string": "^4.0.0",
+    "retext": "^9.0.0",
+    "retext-english": "^5.0.0",
+    "retext-intensify": "^7.0.0",
+    "retext-passive": "^5.0.0",
+    "retext-readability": "^8.0.0",
+    "retext-repeated-words": "^5.0.0",
+    "retext-stringify": "^4.0.0",
+    "syllable": "^5.0.1",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0",
+    "write-good": "^1.0.8",
+    "zod": "^4.5.4"
+  }
+}

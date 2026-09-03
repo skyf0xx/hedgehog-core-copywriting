@@ -1,0 +1,61 @@
+# @skyf0xx/hedgehog-core-copywriting
+
+Hedgehog's copywriting core: a mechanical `checkCopy()` gate against
+AI-tell and prose-quality contracts, the skills that document what it
+checks, and the loop that drafts copy against it until it passes.
+
+The gate is real code — `retext`, `write-good`, and `flesch`/
+`flesch-kincaid` under the hood — not an agent's own read of its draft.
+A piece of copy ships because a script exited 0, the same trust model
+`hedgehog verify` applies to every other core's build layers.
+
+## Contents
+
+- `scripts/check-copy/` — the gate. `index.mjs` is the CLI entry
+  (`node scripts/check-copy/index.mjs <file>`), `rules/tells.mjs` is
+  the AI-tell rule set (banned vocabulary, negation formulas, hedge
+  stacks, structural density checks), `rules/prose.mjs` is the
+  prose-quality rule set (passive voice, weasel words, readability,
+  sentence-length variance, nominalization density), and `report.mjs`
+  is the zod-validated output shape every rule reports through.
+- `agents/copy-writer.md` — drafts copy and iterates it against the
+  gate until it passes or a real conflict with the brief surfaces.
+- `skills/hedgehog-copywriting-loop/` — the operating loop: brief
+  intake, then the draft/checkCopy()/revise cycle.
+- `skills/tells-detector/` and `skills/prose-quality/` — reference for
+  what each rule actually checks and why, read before revising against
+  a violation rather than in place of running the script.
+- `CLAUDE.core.md` — fills a Hedgehog project's root `CLAUDE.md`
+  `{{CORE_SECTION}}` placeholder for this core.
+- `hedgehog-core.yaml` — this package's manifest.
+- `core.yaml` — the two-layer chain (`brief` → `draft`) a Hedgehog
+  install compiles into its build graph.
+
+## Running the gate directly
+
+```
+cd scripts/check-copy && npm install
+node index.mjs path/to/draft.md
+```
+
+Exits 0 with `pass: true` in the JSON report when no error-severity
+violation fired; exits 1 with `pass: false` otherwise.
+
+## Tests
+
+```
+npm test
+```
+
+Runs `scripts/check-copy`'s test suite (Node's built-in test runner)
+against both intentionally AI-sounding and genuinely clean sample text,
+confirming the gate actually discriminates rather than rubber-stamping.
+
+## Status
+
+Early and standalone. Ships one fixed, general-audience rule set —
+no per-project voice profile yet, and no wiring into any other core
+(e.g. `landing-page`'s own copy skill keeps its existing prose
+self-check for now). Both are deliberate: prove the gate's rule set out
+here first before generalizing it or asking another core to depend on
+it.

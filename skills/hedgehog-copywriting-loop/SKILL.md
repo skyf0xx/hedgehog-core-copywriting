@@ -21,25 +21,32 @@ lands `scripts/check-copy/` and `core.yaml` together, as this package's
 is the one core `planner`'s generic Workflow step 9 does not hand off to
 `bootstrap` for; step 5 below runs `hedgehog plan` directly instead,
 since the core.yaml it needs is already on disk. Opens with
-`hedgehog-planning-intake`'s Phase 0 — the same vendored BMAD-METHOD
-shelf every other core runs, in the same full sequence, archived to the
-same `.hedgehog/BMAD/` layout. After that Phase 0 completes, this
-section does its own thin mining pass — what's being written, for
-whom, and in what register — the copywriting counterpart to
+`hedgehog-planning-intake`'s Phase 0 (step 1 below). After that Phase 0
+completes, this section does its own thin mining pass — what's being
+written, for whom, and in what register — the copywriting counterpart to
 `hedgehog-planning-intake`'s own Phase 1 (domain modules and an
 Add-ons decision on full-stack-app).
 
-1. **Run `hedgehog-planning-intake`'s Phase 0 in full**: state the BMAD
-   attribution it states, then run `bmad-forge-idea`,
+1. **Run `hedgehog-planning-intake`'s Phase 0**, full shelf or
+   compressed intake depending on which `planner` routed to for this
+   request (see that skill's "Compressed intake" section): state the
+   BMAD attribution it states, then either run `bmad-forge-idea`,
    `bmad-brainstorming`, `bmad-product-brief`, `bmad-prfaq`, `bmad-prd`,
-   `bmad-ux`, `bmad-deep-recon`, archived to `.hedgehog/BMAD/` with the
-   fixed layout and `00-manifest.md` attribution header that skill's
-   Phase 0 defines. `.hedgehog/BMAD/` is archival and immutable once
-   written, same as every other core — nothing in this core's
-   day-to-day loop reads it live after this step mines it once. There
-   is no reduced or copy-specific shelf: the full sequence runs even
-   though `bmad-ux`'s design-handoff output isn't this core's primary
-   input — `bmad-prd` and `bmad-prfaq` are. `bmad-brainstorming`'s
+   `bmad-ux`, `bmad-deep-recon` in full, or — on an explicit "just build
+   it" choice, for a short, low-stakes piece — the batched round
+   compressed intake defines instead. Either way, archived to
+   `.hedgehog/BMAD/` with the fixed layout and `00-manifest.md`
+   attribution header that skill's Phase 0 defines. `.hedgehog/BMAD/` is
+   archival and immutable once written, same as every other core —
+   nothing in this core's day-to-day loop reads it live after this step
+   mines it once. On a full run, `bmad-ux`'s design-handoff output isn't
+   this core's primary input — `bmad-prd` and `bmad-prfaq` are — so
+   skipping `DESIGN.md` entirely and reducing `EXPERIENCE.md` to
+   whatever sections the brief actually gives it something to say about
+   (rarely more than a Key Flow, if any) is sanctioned behavior on this
+   core, not an improvisation to justify each time `bmad-ux` runs: this
+   core has no UI surface for that skill's Foundation/Component
+   Patterns/State Patterns spine to describe. `bmad-brainstorming`'s
    Ideate-for-me mode defaults to auto-generating an HTML keepsake —
    unwanted work on a core whose deliverables are plain prose. A project
    that wants brainstorming sessions to stay markdown-only can set

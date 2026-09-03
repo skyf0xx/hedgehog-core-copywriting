@@ -15,7 +15,12 @@ process exiting 0 or 1 is.
 
 ## Planning intake (Phase 0, before any build layer)
 
-Run once, before `bootstrap` lands `scripts/check-copy/`. Opens with
+Run once. This core has no bootstrap step: `hedgehog init --copywriting`
+lands `scripts/check-copy/` and `core.yaml` together, as this package's
+`workspace/`, at install time — before planning intake ever starts. This
+is the one core `planner`'s generic Workflow step 9 does not hand off to
+`bootstrap` for; step 5 below runs `hedgehog plan` directly instead,
+since the core.yaml it needs is already on disk. Opens with
 `hedgehog-planning-intake`'s Phase 0 — the same vendored BMAD-METHOD
 shelf every other core runs, in the same full sequence, archived to the
 same `.hedgehog/BMAD/` layout. After that Phase 0 completes, this
@@ -54,13 +59,13 @@ Add-ons decision on full-stack-app).
    (`.hedgehog/BMAD/`), before writing anything to the build graph.
    State plainly what happens on confirmation: *"This locks in the
    brief, adds the `copy` intent to the build graph (`hedgehog intent
-   add`), compiles it into the two-layer chain (`hedgehog plan`),
-   commits (`chore(planning): copy brief`), and hands off to `bootstrap`
-   to land `scripts/check-copy/`. The draft layer starts once that
-   closes. Anything wrong or missing — say so now."* Wait for explicit
-   go-ahead — a revision here is just another mining pass against the
-   same BMAD archive, not a Correction Protocol entry, since nothing
-   downstream exists yet.
+   add`), compiles it into the two-layer chain (`hedgehog plan`), and
+   commits (`chore(planning): copy brief`). The draft layer starts right
+   after — this core's workspace is already installed, so there's no
+   bootstrap step to wait on. Anything wrong or missing — say so now."*
+   Wait for explicit go-ahead — a revision here is just another mining
+   pass against the same BMAD archive, not a Correction Protocol entry,
+   since nothing downstream exists yet.
 5. **Add the intent and compile the graph**: `hedgehog intent add --id
    copy --goal "<what's being written>" --outcome "<audience + register>"`
    — one call, no `--rule`/`--depends-on` needed; copywriting has no

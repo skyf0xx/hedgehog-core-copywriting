@@ -2,6 +2,10 @@
 # brief intake, then a draft-check-revise loop gated by checkCopy()
 # rather than an agent's own self-report — the mechanism this core
 # exists to provide (see hedgehog-copywriting-loop for the loop itself).
+# `scripts/check-copy/` referenced below is this package's
+# `workspace/scripts/check-copy/`, copied to the project root at
+# install time — paths here are relative to the installed project, not
+# the package.
 id: copywriting
 pattern: layered
 layers:

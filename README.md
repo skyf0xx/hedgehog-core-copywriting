@@ -11,7 +11,9 @@ A piece of copy ships because a script exited 0, the same trust model
 
 ## Contents
 
-- `scripts/check-copy/` — the gate. `index.mjs` is the CLI entry
+- `workspace/scripts/check-copy/` — the gate, copied to
+  `scripts/check-copy/` at the root of every project this core installs
+  into. `index.mjs` is the CLI entry
   (`node scripts/check-copy/index.mjs <file>`), `rules/tells.mjs` is
   the AI-tell rule set (banned vocabulary, negation formulas, hedge
   stacks, structural density checks), `rules/prose.mjs` is the
@@ -33,8 +35,11 @@ A piece of copy ships because a script exited 0, the same trust model
 
 ## Running the gate directly
 
+In this repo (against `workspace/scripts/check-copy/`) or in a project
+this core installed into (against `scripts/check-copy/`):
+
 ```
-cd scripts/check-copy && npm install
+cd scripts/check-copy && npm install   # or workspace/scripts/check-copy in this repo
 node index.mjs path/to/draft.md
 ```
 
@@ -47,9 +52,10 @@ violation fired; exits 1 with `pass: false` otherwise.
 npm test
 ```
 
-Runs `scripts/check-copy`'s test suite (Node's built-in test runner)
-against both intentionally AI-sounding and genuinely clean sample text,
-confirming the gate actually discriminates rather than rubber-stamping.
+Runs `workspace/scripts/check-copy`'s test suite (Node's built-in test
+runner) against both intentionally AI-sounding and genuinely clean
+sample text, confirming the gate actually discriminates rather than
+rubber-stamping.
 
 ## Status
 

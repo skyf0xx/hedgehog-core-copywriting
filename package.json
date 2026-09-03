@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "release": "npm version patch -m \"chore: bump version to %s\"",
-    "test": "npm --prefix scripts/check-copy test"
+    "test": "npm --prefix workspace/scripts/check-copy test"
   },
   "repository": {
     "type": "git",
@@ -15,12 +15,12 @@
     "access": "public"
   },
   "files": [
-    "scripts",
+    "workspace",
     "agents",
     "skills",
     "CLAUDE.core.md",
     "hedgehog-core.yaml",
-    "!scripts/check-copy/node_modules/**"
+    "!workspace/scripts/check-copy/node_modules/**"
   ],
   "engines": {
     "node": ">=22.5.0"

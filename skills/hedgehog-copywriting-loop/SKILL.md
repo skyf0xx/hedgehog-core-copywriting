@@ -131,6 +131,17 @@ Add-ons decision on full-stack-app).
    informal run), and on pass writes the layer's commit
    (`feat(copy): draft`). On failure the task moves to `blocked`; go
    back to step 2, don't hand-commit around a block.
+   1. **After verify passes and the layer's commit is written, drop a
+      courtesy export at the project root**: copy the just-verified
+      `.hedgehog/copy/final.md` to a plain file named from a kebab-case
+      slug of `00-brief.md`'s "what's being written" (fallback to
+      `article.md` if the brief text doesn't yield a clean slug), e.g.
+      `product-launch-announcement.md`. If that filename already exists
+      at the root, append `-2`, `-3`, … until it doesn't — never
+      overwrite an earlier piece's export. This is a courtesy copy only:
+      `.hedgehog/copy/final.md` remains the canonical, gated artifact
+      that verify and any later steps reference; nothing about the
+      layer chain or the gate itself changes because of this.
 
 ## Rules
 

@@ -69,6 +69,11 @@ scripts/check-copy/       the gate: index.mjs (CLI entry), rules/tells.mjs,
     final.md                the draft under iteration, gated by check-copy
   hedgehog.db               the build graph — the copy intent, its two
                              compiled layers, verifications, committed to git
+<slugged-title>.md          courtesy export at the project root, dropped by
+                             the loop after draft verify passes — a plain-file
+                             copy of final.md for a non-technical writer to
+                             find; the gated artifact stays
+                             .hedgehog/copy/final.md
 ```
 
 ### Core rule

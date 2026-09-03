@@ -1,6 +1,6 @@
 ---
 name: hedgehog-copywriting-loop
-description: The operating loop for the copywriting core, start to finish — brief intake, then the draft/checkCopy()/revise cycle that gates every piece of copy on a mechanical pass, not an agent's own self-report. Invoke at the start of any copy-writing session and for "what's next."
+description: The operating loop for the copywriting core, start to finish — planning intake (the vendored BMAD-METHOD shelf, mined into a brief), then the draft/checkCopy()/revise cycle that gates every piece of copy on a mechanical pass, not an agent's own self-report. Invoke at the start of any copy-writing session and for "what's next." Also covers this core's own planning intake.
 ---
 
 # Copywriting Loop
@@ -13,12 +13,72 @@ returns a structured violation report. The loop exists because an
 agent's own read of its draft ("this looks clean") is not a gate; a
 process exiting 0 or 1 is.
 
+## Planning intake (Phase 0, before any build layer)
+
+Run once, before `bootstrap` lands `scripts/check-copy/`. Opens with
+`hedgehog-planning-intake`'s Phase 0 — the same vendored BMAD-METHOD
+shelf every other core runs, in the same full sequence, archived to the
+same `.hedgehog/BMAD/` layout. After that Phase 0 completes, this
+section does its own thin mining pass — what's being written, for
+whom, and in what register — the copywriting counterpart to
+`hedgehog-planning-intake`'s own Phase 1 (domain modules and an
+Add-ons decision on full-stack-app).
+
+1. **Run `hedgehog-planning-intake`'s Phase 0 in full**: state the BMAD
+   attribution it states, then run `bmad-forge-idea`,
+   `bmad-brainstorming`, `bmad-product-brief`, `bmad-prfaq`, `bmad-prd`,
+   `bmad-ux`, `bmad-deep-recon`, archived to `.hedgehog/BMAD/` with the
+   fixed layout and `00-manifest.md` attribution header that skill's
+   Phase 0 defines. `.hedgehog/BMAD/` is archival and immutable once
+   written, same as every other core — nothing in this core's
+   day-to-day loop reads it live after this step mines it once. There
+   is no reduced or copy-specific shelf: the full sequence runs even
+   though `bmad-ux`'s design-handoff output isn't this core's primary
+   input — `bmad-prd` and `bmad-prfaq` are.
+2. **Mine a draft brief** from `.hedgehog/BMAD/`: what's being written
+   (the concrete piece — a landing page section, a product announcement,
+   a UI microcopy string, docs prose), the audience, and the register to
+   write in, sourced from the product brief and PR-FAQ (the closest BMAD
+   artifacts to a copy brief). `00-brief.md` itself stays this thin by
+   design — the root the `draft` layer works from, not a copy of BMAD's
+   full archive. Where the brief/PR-FAQ leaves what/audience/register
+   genuinely unresolved, ask directly — don't proceed on vagueness, and
+   don't invent an audience or register that wasn't stated, mined, or
+   confirmed.
+3. **Write `.hedgehog/copy/00-brief.md`** — the mined what/audience/
+   register, in plain terms. This is the root the `draft` layer's
+   `copy-writer` agent works from; it draws from BMAD's archive but is
+   its own file, not a pointer into `.hedgehog/BMAD/`.
+4. **Confirm & Lock** — show the mined brief back in plain terms,
+   alongside which BMAD skills ran and where their output lives
+   (`.hedgehog/BMAD/`), before writing anything to the build graph.
+   State plainly what happens on confirmation: *"This locks in the
+   brief, adds the `copy` intent to the build graph (`hedgehog intent
+   add`), compiles it into the two-layer chain (`hedgehog plan`),
+   commits (`chore(planning): copy brief`), and hands off to `bootstrap`
+   to land `scripts/check-copy/`. The draft layer starts once that
+   closes. Anything wrong or missing — say so now."* Wait for explicit
+   go-ahead — a revision here is just another mining pass against the
+   same BMAD archive, not a Correction Protocol entry, since nothing
+   downstream exists yet.
+5. **Add the intent and compile the graph**: `hedgehog intent add --id
+   copy --goal "<what's being written>" --outcome "<audience + register>"`
+   — one call, no `--rule`/`--depends-on` needed; copywriting has no
+   module axis, so this single intent is what `hedgehog plan` compiles
+   against this core's `core.yaml` into the two layer tasks. Run
+   `hedgehog plan` next, then `hedgehog status` to show the compiled
+   chain.
+6. **Commit planning intake's output as one commit**,
+   `chore(planning): copy brief` — the committed intent
+   (`.hedgehog/intents/copy.json`), `.hedgehog/BMAD/`, and
+   `.hedgehog/copy/00-brief.md` together.
+
 ## The layers
 
-1. **`brief`** — capture what's being written, for whom, and in what
-   register, at `.hedgehog/copy/00-brief.md`. `hedgehog verify` on this
-   layer only checks the file is non-empty; there's no copy quality
-   gate yet because there's no copy yet.
+1. **`brief`** — written by the planning intake section above, at
+   `.hedgehog/copy/00-brief.md`. `hedgehog verify` on this layer only
+   checks the file is non-empty; there's no copy quality gate yet
+   because there's no copy yet.
 2. **`draft`** — the loop below, ending with `.hedgehog/copy/final.md`
    passing `node scripts/check-copy/index.mjs .hedgehog/copy/final.md`
    with exit code 0.

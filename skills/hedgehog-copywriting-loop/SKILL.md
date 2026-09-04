@@ -168,9 +168,19 @@ Add-ons decision on full-stack-app).
 
 1. **`hedgehog claim --owner copy-writer --count 1`** emits the task
    packet for the ready layer.
-2. **Delegate to `copy-writer`.** It reads the brief, drafts copy into
-   `.hedgehog/copy/final.md`, then runs the gate itself before
-   presenting anything:
+2. **Delegate to `copy-writer`.** This core's whole install is ephemeral
+   and same-session (Phase -1), so `copy-writer` was *just* written to
+   `.claude/agents/` moments ago — dispatch by name (`subagent_type:
+   copy-writer`) will reliably fail with "Agent type 'copy-writer' not
+   found" every single time, since this host only reads agent
+   registration once at session start, not mid-session. This isn't an
+   edge case to discover via a failed tool call: skip dispatch by name
+   entirely and read `.claude/agents/copy-writer.md` directly, then
+   follow it inline instead. (Root CLAUDE.md's "Delegating on this
+   host" note covers the same mechanism for every other core, where it
+   ordinarily *is* an edge case rather than the guaranteed path.) The
+   agent reads the brief, drafts copy into `.hedgehog/copy/final.md`,
+   then runs the gate itself before presenting anything:
    ```
    node scripts/check-copy/index.mjs .hedgehog/copy/final.md
    ```
@@ -237,8 +247,3 @@ Add-ons decision on full-stack-app).
   turns out wrong mid-draft is a Correction Protocol case — fix the
   brief at its source, re-run the draft layer, not patch around it in
   `final.md`.
-
-If a dispatch by name reports the agent as not found — expected right
-after `init`/`update` installed it this same session — see root
-CLAUDE.md's "Delegating on this host" note rather than treating it as
-fatal.

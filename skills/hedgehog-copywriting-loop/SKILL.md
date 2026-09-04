@@ -182,8 +182,11 @@ Add-ons decision on full-stack-app).
    agent reads the brief, drafts copy into `.hedgehog/copy/final.md`,
    then runs the gate itself before presenting anything:
    ```
-   node scripts/check-copy/index.mjs .hedgehog/copy/final.md
+   node scripts/check-copy/index.mjs .hedgehog/copy/final.md --style <profile>
    ```
+   `<profile>` is `marketing`, `general`, or `long-form`, chosen from
+   the brief's register per the Rules section below and held constant
+   for the whole loop.
 3. **Read the JSON report.** `pass: false` means at least one
    error-severity violation fired — revise and re-run, not argue with
    the report. `pass: true` with `warningCount > 0` is a judgment call:
@@ -237,12 +240,18 @@ Add-ons decision on full-stack-app).
   "delve" from a sentence that's still structurally a hedge stack is
   gaming the gate, not fixing the copy — the loop should always leave
   the draft better, not just quieter.
-- **`checkCopy()`'s default thresholds are the general-audience
-  contract** (see `prose-quality`'s reading-ease floor and grade
-  ceiling) — this core ships one fixed rule set, not a per-project
-  voice profile, so don't invent exceptions ad hoc. If a real project
-  needs a different register, that's a signal to extend the contract
-  itself (a future voice-profile config), not to bypass it per-draft.
+- **Pick the style profile from the brief's register, once, before the
+  first draft.** `--style marketing` for landing pages, product and UI
+  copy; `--style long-form` for essays, articles, and technical
+  writing; `general` (the default) for everything else. Use the same
+  profile for every iteration and for `hedgehog verify` — switching
+  profiles mid-loop to clear a violation is gaming the gate.
+- **The profile moves four numbers, not the contract.** Reading grade,
+  reading ease, em-dash rate, and the sentence-length floor are
+  register-dependent. Abstraction density, AI-tell phrasing, and
+  repeated words are identical in every profile, because no register
+  makes them acceptable. If a draft can't clear those, no profile will
+  help — that's a real conflict to surface, per step 4.
 - **The brief is read-only once the draft layer starts.** A brief that
   turns out wrong mid-draft is a Correction Protocol case — fix the
   brief at its source, re-run the draft layer, not patch around it in

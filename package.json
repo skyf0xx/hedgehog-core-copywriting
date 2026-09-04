@@ -20,8 +20,9 @@
     "skills",
     "CLAUDE.core.md",
     "ARCHITECTURE.md",
-    "!workspace/node_modules/**",
+    "EXTENDING.md",
     "hedgehog-core.yaml",
+    "!workspace/node_modules/**",
     "!workspace/scripts/check-copy/node_modules/**"
   ],
   "engines": {

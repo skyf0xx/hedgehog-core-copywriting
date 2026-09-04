@@ -29,6 +29,22 @@ import { fleschKincaid } from 'flesch-kincaid';
 const READING_EASE_FLOOR = 50; // below this reads as hard for a general audience
 const GRADE_CEILING = 10; // above this reads as too technical/dense
 
+// retext-intensify's `weasel` rule fires off a merged fillers+hedges+weasels
+// word list (see retext-intensify/lib/index.js) with no way to select a
+// subset at match time — only an `ignore` list of exact phrases. A chunk of
+// that merged list (from the `weasels` package specifically) is ordinary
+// grammatical/connective vocabulary with no hedging signal on its own —
+// "that", "then", "so", "just", "also", "still", "about", "up", "down",
+// "well" carry the sentence in normal conversational prose and fire on
+// nearly every casual paragraph regardless of quality. Ignored here so the
+// rule keeps catching actual vagueness (arguably, reportedly, some, often,
+// probably, experts, and the rest of `weasels`/`hedges`/`fillers`) without
+// the noise floor drowning it out on a casual or humorous register.
+const WEASEL_IGNORE = [
+  'about', 'again', 'all', 'also', 'back', 'even', 'ever', 'far', 'just',
+  'like', 'over', 'own', 'so', 'still', 'that', 'then', 'up', 'well',
+];
+
 const SENTENCE_SPLIT = /[.!?]+[\s\n]+/;
 const NOMINALIZATION = /\b\w+(tion|ment|ance|ence)s?\b/gi;
 
@@ -94,7 +110,7 @@ export async function checkProse(text, { wordCount }) {
   const processor = unified()
     .use(retextEnglish)
     .use(retextPassive)
-    .use(retextIntensify)
+    .use(retextIntensify, { ignore: WEASEL_IGNORE })
     .use(retextRepeatedWords)
     .use(retextReadability, { age: 16, threshold: 4 })
     .use(retextStringify);

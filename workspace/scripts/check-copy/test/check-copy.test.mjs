@@ -44,3 +44,21 @@ test('flags low sentence-length variance (burstiness) on uniform sentences', asy
   const report = await checkCopy(text);
   assert.ok(report.violations.some((v) => v.rule === 'prose/low-burstiness'));
 });
+
+test('does not flag ordinary connective words as weasel words', async () => {
+  const text = `Then there's the whiskers. The cat still runs the household from that chair by the window. It just makes the smugness official.`;
+  const report = await checkCopy(text);
+  const weaselWords = report.violations
+    .filter((v) => v.rule === 'prose/weasel-word')
+    .map((v) => v.message);
+  assert.ok(
+    !weaselWords.some((m) => /`(that|Then|still|just|also|so|about)`/i.test(m)),
+    `expected no weasel-word hits on connective words, got: ${weaselWords.join(', ')}`,
+  );
+});
+
+test('still flags genuine hedging as a weasel word', async () => {
+  const text = `Some experts say the results are arguably promising, though the study reportedly used a small sample.`;
+  const report = await checkCopy(text);
+  assert.ok(report.violations.some((v) => v.rule === 'prose/weasel-word'));
+});

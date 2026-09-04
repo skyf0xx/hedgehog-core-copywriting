@@ -1,0 +1,5 @@
+{
+  "name": "hedgehog-copywriting-workspace",
+  "private": true,
+  "workspaces": ["scripts/check-copy"]
+}

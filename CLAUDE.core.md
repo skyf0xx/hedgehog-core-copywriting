@@ -25,12 +25,32 @@ contract.
   voice, weasel words, readability score, sentence-length variance,
   nominalization density.
 
+The two above are universal and run against every draft. The four below
+document the per-format contracts (`format/*`), each selected by the
+brief's `type:` field. Read the one matching the copy type before
+drafting, since a format contract shapes the draft rather than only
+grading it afterwards.
+
+- **`ad-copy`** (`type: ad`) — Meta ad copy: the three fields and their
+  character limits, the 125-character "See more" fold, and the
+  compliance claims that get an ad account suspended.
+- **`landing-page-copy`** (`type: landing-page`) — short-form bridge and
+  pre-sell pages: the three-paragraph framework, message match from the
+  ad, and mobile-first formatting.
+- **`direct-response-copy`** (`type: direct-response`) — long-form sales
+  copy, VSLs, and email: headlines, open loops, the slippery slide, and
+  the classic frameworks behind them.
+- **`tweet-copy`** (`type: tweet`) — a single post on X: the hook
+  formulas, the 280-character limit and how X actually counts it, and
+  the engagement patterns that suppress reach.
+
 ### The agent
 
-`copy-writer` runs the `draft` layer: reads the locked brief, drafts
-into `.hedgehog/copy/final.md`, and iterates against the gate until it
-passes or a real conflict surfaces. It never presents a draft that
-hasn't actually been run through `scripts/check-copy`.
+`copy-writer` runs the `draft` layer: reads the locked brief and its
+`type:`, drafts into `.hedgehog/copy/final.md`, and iterates against the
+gate until it passes or a real conflict surfaces. It never presents a
+draft that hasn't actually been run through `scripts/check-copy`, and
+never drops or switches `--format` to get a passing report.
 
 ## The constants (do not deviate)
 
@@ -40,20 +60,31 @@ hasn't actually been run through `scripts/check-copy`.
 whether a draft is done:
 
 ```
-node scripts/check-copy/index.mjs <file>
+node scripts/check-copy/index.mjs <file> [--format <type>] [--premium]
 ```
 
 Exits 0 and reports `pass: true` when no error-severity violation
-fired; exits 1 with `pass: false` otherwise. Built on `retext` (passive
+fired; exits 1 with `pass: false` otherwise.
+
+`--format` is one of `prose` (the default), `ad`, `landing-page`,
+`direct-response`, or `tweet`, and comes from the brief's `type:` field.
+The AI-tell and prose contracts run either way; the format contract adds
+what those rules cannot see, which is whether the copy obeys the medium
+it ships into. A 446-character post is a defect no prose rule can catch,
+because nothing about its sentences is wrong. `metrics.format` in the
+report names the contract that ran. Built on `retext` (passive
 voice, weasel words, repeated words, readability), `write-good` (wordy
 phrases, clichés), `flesch`/`flesch-kincaid` (document-level readability
 scores), and a custom AI-tell rule set (`scripts/check-copy/rules/tells.mjs`)
 — not hand-rolled grammar or syllable-counting logic. `zod`
 (`scripts/check-copy/report.mjs`) validates the report's shape.
 
-This core ships one fixed rule set — general-audience defaults (Flesch
-Reading Ease floor of 50, Flesch-Kincaid grade ceiling of 10) — not a
-per-project voice profile. A genuine mismatch (a technical register
+This core ships one fixed rule set per format — general-audience
+defaults (Flesch Reading Ease floor of 50, Flesch-Kincaid grade ceiling
+of 10) plus the selected format's own contract, not a per-project voice
+profile. A format contract only ever adds to the universal pair and
+never relaxes it, so no copy type is licensed to sound more like an LLM
+because of where it ships. A genuine mismatch (a technical register
 that needs jargon the gate flags, a document that must stay dense) is a
 signal to extend the contract deliberately, not to work around a
 warning or error silently on a per-draft basis.
@@ -68,10 +99,12 @@ started in.
 
 ```text
 scripts/check-copy/       the gate: index.mjs (CLI entry), rules/tells.mjs,
-                           rules/prose.mjs, report.mjs (zod-validated output shape)
+                           rules/prose.mjs, rules/formats/ (the per-type
+                           contracts), report.mjs (zod-validated output shape)
 .hedgehog/
   copy/
-    00-brief.md            what's being written, for whom, in what register
+    00-brief.md            what's being written, its type, for whom, in
+                             what register
     final.md                the draft under iteration, gated by check-copy
   hedgehog.db               the build graph — the copy intent, its two
                              compiled layers, verifications, committed to git
@@ -89,5 +122,6 @@ by anything in the loop.
 
 **A pass is a script exit code, not a sentence.** No copy ships on the
 strength of "this reads clean" — it ships because
-`node scripts/check-copy/index.mjs` said so, checked at both the
-informal drafting loop and again at `hedgehog verify`.
+`node scripts/check-copy/index.mjs` said so, under the format its brief
+named, checked at both the informal drafting loop and again at
+`hedgehog verify`.

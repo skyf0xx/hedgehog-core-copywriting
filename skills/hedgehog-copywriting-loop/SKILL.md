@@ -46,7 +46,18 @@ there. Run these steps in order, before anything else in the session:
    `(copywriting installs to a scratch directory, never here — using
    <path>)` is the first line of output — as `$TMPDIR` for the rest of
    this session.
-4. **The invariant from here on**: every `hedgehog` command for the
+4. **Install the workspace's dependencies**, from inside `$TMPDIR`:
+   ```
+   (cd "$TMPDIR" && pnpm install)
+   ```
+   `init --copywriting` lands `scripts/check-copy/`'s `package.json` and
+   the workspace's lockfile but never runs the install itself — every
+   `check-copy` invocation below imports packages (`unified`, `retext-*`)
+   that don't exist on disk until this runs. Do this once, right after
+   capturing `$TMPDIR`, before Phase 0 or any `check-copy` call — running
+   it lazily on the first gate failure works too, but doing it here
+   means that failure never happens.
+5. **The invariant from here on**: every `hedgehog` command for the
    rest of this loop, and every file this loop writes (`.hedgehog/copy/`,
    the BMAD archive under `.hedgehog/BMAD/`), happens inside `$TMPDIR`,
    never `$ORIGDIR`. Every `hedgehog` invocation is wrapped as a

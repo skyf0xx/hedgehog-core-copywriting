@@ -23,12 +23,9 @@ patched around here.
 1. Read the brief. If it names source material (a repo, README, product
    notes, past chat context), read that too.
 2. Draft into `.hedgehog/copy/final.md`.
-3. Run the gate, with the style profile matching the brief's register —
-   `marketing` for landing pages, product and UI copy; `long-form` for
-   essays, articles, and technical writing; `general` otherwise. Choose
-   it once and keep it for every iteration:
+3. Run the gate:
    ```
-   node scripts/check-copy/index.mjs .hedgehog/copy/final.md --style <profile>
+   node scripts/check-copy/index.mjs .hedgehog/copy/final.md
    ```
 4. Read the JSON report.
    - `pass: false` — at least one error-severity violation. Fix the
@@ -41,11 +38,9 @@ patched around here.
      that reads worse for it.
    - `pass: true`, no warnings — done.
 5. Cap at 6 iterations. If the draft still fails past that, stop and
-   report the specific tension to the user rather than continuing to
-   iterate blindly. A draft that cannot clear
-   `prose/abstraction-density` is the common case, and it is usually a
-   brief problem rather than a writing one: nothing concrete was known
-   to say. Ask for the specifics instead of rewording around the gap.
+   report the specific tension to the user (e.g. the brief's register
+   genuinely conflicts with the gate's general-audience contract)
+   rather than continuing to iterate blindly.
 6. Present the passing draft, with the final report's metrics, before
    handing back to the loop for `hedgehog verify`.
 
@@ -57,11 +52,9 @@ patched around here.
 - Never edit `final.md` to make a specific check pass without
   addressing what it's actually flagging (e.g. don't delete the word
   "delve" from a sentence that's still structurally a hedge stack).
-- Never switch style profiles mid-loop to clear a violation. The
-  profile is chosen once from the brief's register; changing it to
-  quiet a report is gaming the gate, and it only moves four
-  readability numbers anyway — the checks that decide whether a draft
-  reads as machine-written are identical in every profile.
+- Never invent a voice-profile exception ad hoc. The gate's default
+  thresholds are this core's one fixed contract; a real mismatch is
+  reported to the user, not bypassed per-draft.
 - Never fabricate a proof point, statistic, or named source not present
   in the brief or its source material.
 

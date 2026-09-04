@@ -1,24 +1,13 @@
 // Prose-quality checks: passive voice, weasel words, repeated words,
-// readability, and sentence-length variance (burstiness). Backed by retext
-// plugins rather than hand-rolled grammar/readability logic — sentence
-// boundary detection and syllable counting are both known to be
-// error-prone to reimplement from scratch.
+// readability, wordy phrases, and sentence-length variance (burstiness).
+// Backed by retext plugins and write-good rather than hand-rolled
+// grammar/readability logic — sentence boundary detection and syllable
+// counting are both known to be error-prone to reimplement from scratch.
 //
-// Readability thresholds live in profiles.mjs, not here: reading grade is
-// the clearest case of a number that is only meaningful relative to a
-// register. A single ceiling reported a good essay as too dense for
-// writing exactly as dense as an essay should be.
-//
-// write-good was removed rather than tuned. Measured against a validation
-// set, its `adverb` check ("X can weaken meaning") produced eight false
-// positives on one good essay and two true ones; disabling the noisy
-// checks left a residue that still fired on three good samples
-// ("it is" is wordy) while falling silent on the AI-shaped one — signal
-// anti-correlated with quality. Its `weasel` check duplicated
-// retext-intensify, its `passive` check duplicated retext-passive (and had
-// to be deduped by character offset), and its `cliches` check caught one
-// of seven stacked clichés in a deliberately loaded test. Clichés are
-// covered as explicit phrases in tells.mjs, where a phrase list works.
+// retext-passive and write-good both flag passive voice from different
+// angles (retext-passive: grammatical pattern; write-good: phrase-level
+// heuristic) — both run, deduped by overlapping character offset so a
+// single passive clause isn't reported twice.
 
 import { unified } from 'unified';
 import retextEnglish from 'retext-english';
@@ -27,11 +16,18 @@ import retextPassive from 'retext-passive';
 import retextIntensify from 'retext-intensify';
 import retextRepeatedWords from 'retext-repeated-words';
 import retextReadability from 'retext-readability';
+import writeGood from 'write-good';
 import { visit } from 'unist-util-visit';
 import { toString } from 'nlcst-to-string';
 import { syllable } from 'syllable';
 import { flesch } from 'flesch';
 import { fleschKincaid } from 'flesch-kincaid';
+
+// General-audience default target (confirmed as the starting contract:
+// a fixed rule set now, structured to become a per-project voice
+// profile later rather than hardcoded inline here forever).
+const READING_EASE_FLOOR = 50; // below this reads as hard for a general audience
+const GRADE_CEILING = 10; // above this reads as too technical/dense
 
 // retext-intensify's `weasel` rule fires off a merged fillers+hedges+weasels
 // word list (see retext-intensify/lib/index.js) with no way to select a
@@ -44,44 +40,9 @@ import { fleschKincaid } from 'flesch-kincaid';
 // rule keeps catching actual vagueness (arguably, reportedly, some, often,
 // probably, experts, and the rest of `weasels`/`hedges`/`fillers`) without
 // the noise floor drowning it out on a casual or humorous register.
-// Three distinguishable categories share one merged list, and only one of
-// them is a quality signal:
-//
-//   1. Actual hedging — `arguably`, `reportedly`, `allegedly`, `presumably`,
-//      `supposedly`, `somewhat`, `experts`, `probably`. Kept: these mark a
-//      claim the writer is declining to stand behind.
-//   2. Ordinary grammar — `that`, `then`, `so`, `only`, `rather`, `better`,
-//      `few`, `most`, `can`, `will`, `would`, `should`, `must`. Ignored:
-//      these carry sentences in every register and fire on nearly every
-//      paragraph regardless of quality.
-//   3. Perception and cognition verbs — `saw`, `knew`, `felt`, `looked`,
-//      `noticed`, `thought`, `wondered`, `watched`. Ignored, and these are
-//      the clearest case: concrete narrative writing is built from them, so
-//      flagging them penalizes exactly the specificity the rest of this
-//      gate rewards.
-//
-// Measured effect: a literary essay drew 14 warnings before this list and
-// the write-good removal, of which 2 were fair. Comparatives (`better`) and
-// restrictives (`only`) accounted for the largest share of the rest.
 const WEASEL_IGNORE = [
-  // Connectives and ordinary function words.
   'about', 'again', 'all', 'also', 'back', 'even', 'ever', 'far', 'just',
   'like', 'over', 'own', 'so', 'still', 'that', 'then', 'up', 'well',
-  'only', 'rather', 'quite', 'enough', 'close', 'real', 'right', 'too',
-  // Comparatives and quantifiers doing ordinary work.
-  'better', 'few', 'most', 'many', 'much', 'little', 'bit', 'lots', 'sort',
-  'several', 'various', 'huge', 'vast', 'tiny', 'pretty',
-  // Modals: these state a claim's strength, which is grammar, not hedging.
-  'can', 'will', 'would', 'should', 'must', 'may', 'might', 'could',
-  // Perception and cognition verbs — the vocabulary of concrete writing.
-  'saw', 'knew', 'felt', 'looked', 'looks', 'noticed', 'thought', 'watched',
-  'wondered', 'wanted', 'wished', 'understood', 'realised', 'realized',
-  'recognised', 'recognized', 'heard', 'smelled', 'touched', 'began',
-  'started', 'decided', 'find', 'finds', 'found', 'say', 'says', 'read',
-  'think', 'thinks', 'consider', 'considers', 'understand', 'understands',
-  // Ordinary verbs the list treats as vague.
-  'helps', 'works', 'supports', 'acts', 'gains', 'improved', 'useful',
-  'effective', 'efficient', 'excellent',
 ];
 
 const SENTENCE_SPLIT = /[.!?]+[\s\n]+/;
@@ -107,36 +68,24 @@ function stdDev(values) {
   return Math.sqrt(variance);
 }
 
-export async function checkProse(text, { wordCount, profile }) {
+function overlaps(rangeA, rangeB) {
+  return rangeA.start < rangeB.end && rangeB.start < rangeA.end;
+}
+
+export async function checkProse(text, { wordCount }) {
   const violations = [];
   const sentences = splitSentences(text);
 
   // Sentence-length variance (burstiness): human writing mixes short and
-  // long sentences; uniform length reads as machine output. An error rather
-  // than a warning — a structural tell, and structural tells are what
-  // survive a model being told to avoid a vocabulary list.
-  //
-  // The sentence floor is eight, not four, precisely because this is now an
-  // error. Standard deviation over a handful of sentences describes the
-  // sample rather than the writing: measured across the validation set,
-  // three-sentence samples ranged from 1.41 to 6.13 with no relation to
-  // quality, and a four-sentence paragraph of good concrete prose scored
-  // 2.77 — a failing draft under any useful threshold. At eight-plus
-  // sentences the signal holds: the AI-shaped sample runs 2.24 across
-  // twelve sentences while every good sample of comparable length clears 4.
-  //
-  // Note this check only fires below the floor. Bad prose can score high
-  // (a deliberately abstract sample hit 9.93), so burstiness catches one
-  // specific failure — mechanical uniformity — and is not evidence of
-  // quality in the other direction.
+  // long sentences; uniform length reads as machine output.
   const lengths = sentences.map((s) => s.split(/\s+/).filter(Boolean).length);
   const lengthStdDev = stdDev(lengths);
-  if (sentences.length >= 8 && lengthStdDev < profile.minSentenceLengthStdDev) {
+  if (sentences.length >= 4 && lengthStdDev < 3) {
     violations.push({
       rule: 'prose/low-burstiness',
       grain: 'document',
-      severity: 'error',
-      message: `Sentence length barely varies (stddev ${lengthStdDev.toFixed(1)} words, floor ${profile.minSentenceLengthStdDev} for ${profile.label}) — mix short and long sentences on purpose`,
+      severity: 'warning',
+      message: `Sentence length barely varies (stddev ${lengthStdDev.toFixed(1)} words) — mix short and long sentences on purpose`,
       excerpt: '',
       location: {},
     });
@@ -163,14 +112,11 @@ export async function checkProse(text, { wordCount, profile }) {
     .use(retextPassive)
     .use(retextIntensify, { ignore: WEASEL_IGNORE })
     .use(retextRepeatedWords)
-    // Age tracks the profile's grade ceiling (US grade + ~5 years), so
-    // per-sentence readability flags stay consistent with the
-    // document-level grade check below rather than contradicting it.
-    .use(retextReadability, { age: profile.readingGradeMax + 5, threshold: 4 })
+    .use(retextReadability, { age: 16, threshold: 4 })
     .use(retextStringify);
 
   const file = await processor.process(text);
-  let passiveCount = 0;
+  const passiveRanges = [];
 
   for (const msg of file.messages) {
     const start = msg.place?.start?.offset ?? 0;
@@ -178,7 +124,7 @@ export async function checkProse(text, { wordCount, profile }) {
     const excerpt = excerptAround(text, start, end - start);
 
     if (msg.source === 'retext-passive') {
-      passiveCount++;
+      passiveRanges.push({ start, end });
       violations.push({
         rule: 'prose/passive-voice',
         grain: 'sentence',
@@ -217,6 +163,24 @@ export async function checkProse(text, { wordCount, profile }) {
     }
   }
 
+  // write-good: wordy phrases, clichés, and its own passive-voice heuristic
+  // — kept only where it doesn't overlap a retext-passive hit already reported.
+  for (const issue of writeGood(text)) {
+    const range = { start: issue.index, end: issue.index + issue.offset };
+    const isPassiveDupe = /passive voice/i.test(issue.reason) && passiveRanges.some((r) => overlaps(r, range));
+    if (isPassiveDupe) continue;
+
+    violations.push({
+      rule: 'prose/write-good',
+      grain: 'sentence',
+      severity: 'warning',
+      message: issue.reason,
+      excerpt: excerptAround(text, issue.index, issue.offset),
+      location: {},
+    });
+  }
+
+  const passiveCount = passiveRanges.length;
   const passiveVoiceRatio = sentences.length === 0 ? 0 : Math.min(1, passiveCount / sentences.length);
 
   // Document-level Flesch scores: retext-readability only flags individual
@@ -235,22 +199,22 @@ export async function checkProse(text, { wordCount, profile }) {
   const fleschReadingEase = counts.sentence > 0 && counts.word > 0 ? flesch(counts) : null;
   const fleschKincaidGrade = counts.sentence > 0 && counts.word > 0 ? fleschKincaid(counts) : null;
 
-  if (fleschReadingEase !== null && fleschReadingEase < profile.readingEaseMin) {
+  if (fleschReadingEase !== null && fleschReadingEase < READING_EASE_FLOOR) {
     violations.push({
       rule: 'prose/reading-ease',
       grain: 'document',
       severity: 'warning',
-      message: `Flesch Reading Ease ${fleschReadingEase.toFixed(1)} is below the ${profile.label} floor of ${profile.readingEaseMin} — simplify sentence and word length`,
+      message: `Flesch Reading Ease ${fleschReadingEase.toFixed(1)} is below the general-audience floor of ${READING_EASE_FLOOR} — simplify sentence and word length`,
       excerpt: '',
       location: {},
     });
   }
-  if (fleschKincaidGrade !== null && fleschKincaidGrade > profile.readingGradeMax) {
+  if (fleschKincaidGrade !== null && fleschKincaidGrade > GRADE_CEILING) {
     violations.push({
       rule: 'prose/grade-level',
       grain: 'document',
       severity: 'warning',
-      message: `Flesch-Kincaid grade ${fleschKincaidGrade.toFixed(1)} is above the ${profile.label} ceiling of ${profile.readingGradeMax} — shorten sentences or simplify vocabulary`,
+      message: `Flesch-Kincaid grade ${fleschKincaidGrade.toFixed(1)} is above the general-audience ceiling of ${GRADE_CEILING} — shorten sentences or simplify vocabulary`,
       excerpt: '',
       location: {},
     });

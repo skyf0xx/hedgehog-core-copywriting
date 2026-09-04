@@ -58,31 +58,12 @@ only past a per-document density threshold.
   content one, but a strong signal on its own when combined with
   others.
 
-## Errors vs. warnings
-
-Banned vocabulary is a **warning**; banned phrases, negation formulas,
-hedge stacks, copula avoidance, and rule-of-three density are
-**errors**.
-
-That ordering looks backwards and isn't. It follows from evasion cost.
-A vocabulary list is the cheapest check to defeat — a model told to
-avoid sixty words avoids them in one rewrite, without the prose getting
-any better. A sample written to dodge the list entirely ("Our platform
-brings these workflows together in one place") once passed this gate
-with zero errors while being exactly the output it exists to catch,
-and a single `robust` in an otherwise concrete draft failed it.
-
-So vocabulary reports rather than decides. What fails a draft is shape:
-formulations that have to be restructured rather than substituted, plus
-`prose/abstraction-density` and `prose/low-burstiness` on the
-prose-quality side.
-
 ## When a violation looks wrong
 
-A genuinely load-bearing use of a flagged word — a technical document
-about a `robust` statistical estimator, where the word is a term of art
-— is now a warning, so it no longer blocks. Note it and move on.
-
-A flagged *phrase* still blocks, and rightly: these are whole
-formulations with no legitimate use in any register. Removing one means
-rewriting the sentence rather than swapping a synonym.
+If a genuinely load-bearing use of a "banned" word is being flagged
+(e.g. a technical document about a `robust` statistical estimator,
+where the word is a term of art, not filler), that's a signal the
+brief's register doesn't match this core's default general-audience
+contract — raise it to the user per `hedgehog-copywriting-loop`'s rule
+on extending the contract, rather than working around the flag
+silently.

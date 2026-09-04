@@ -4,7 +4,7 @@ Hedgehog's copywriting core: a mechanical `checkCopy()` gate against
 AI-tell and prose-quality contracts, the skills that document what it
 checks, and the loop that drafts copy against it until it passes.
 
-The gate is real code — `retext`, `compromise`, and `flesch`/
+The gate is real code — `retext`, `write-good`, and `flesch`/
 `flesch-kincaid` under the hood — not an agent's own read of its draft.
 A piece of copy ships because a script exited 0, the same trust model
 `hedgehog verify` applies to every other core's build layers.
@@ -18,10 +18,7 @@ A piece of copy ships because a script exited 0, the same trust model
   the AI-tell rule set (banned vocabulary, negation formulas, hedge
   stacks, structural density checks), `rules/prose.mjs` is the
   prose-quality rule set (passive voice, weasel words, readability,
-  sentence-length variance, nominalization density),
-  `rules/abstraction.mjs` scores how much of a draft names something
-  concrete, `rules/profiles.mjs` holds the register-dependent
-  thresholds (`--style marketing|general|long-form`), and `report.mjs`
+  sentence-length variance, nominalization density), and `report.mjs`
   is the zod-validated output shape every rule reports through.
 - `workspace/core.yaml` — the two-layer chain (`brief` → `draft`) a
   Hedgehog install compiles into its build graph, copied to the root of
@@ -35,10 +32,6 @@ A piece of copy ships because a script exited 0, the same trust model
   a violation rather than in place of running the script.
 - `CLAUDE.core.md` — fills a Hedgehog project's root `CLAUDE.md`
   `{{CORE_SECTION}}` placeholder for this core.
-- `EXTENDING.md` — checklists for changing the gate: adjusting a style
-  profile, adding or removing one, adding a rule, and the dependency
-  bar. Read before editing `rules/profiles.mjs`, since adding a profile
-  touches five documents that name them by hand.
 - `hedgehog-core.yaml` — this package's manifest.
 
 ## Running the gate directly

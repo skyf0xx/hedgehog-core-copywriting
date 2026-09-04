@@ -45,31 +45,18 @@ node scripts/check-copy/index.mjs <file>
 
 Exits 0 and reports `pass: true` when no error-severity violation
 fired; exits 1 with `pass: false` otherwise. Built on `retext` (passive
-voice, weasel words, repeated words, readability), `compromise`
-(part-of-speech tagging behind the abstraction check),
-`flesch`/`flesch-kincaid` (document-level readability scores), and a
-custom AI-tell rule set (`scripts/check-copy/rules/tells.mjs`) — not
-hand-rolled grammar or syllable-counting logic. `zod`
+voice, weasel words, repeated words, readability), `write-good` (wordy
+phrases, clichés), `flesch`/`flesch-kincaid` (document-level readability
+scores), and a custom AI-tell rule set (`scripts/check-copy/rules/tells.mjs`)
+— not hand-rolled grammar or syllable-counting logic. `zod`
 (`scripts/check-copy/report.mjs`) validates the report's shape.
 
-What fails a draft is shape, not vocabulary. Abstraction density,
-sentence-length uniformity, and AI-tell phrasing are errors; individual
-banned words are warnings. The reason is evasion cost — a word list is
-the one check a model can satisfy without writing any better, so it
-reports rather than decides.
-
-Register-dependent thresholds (reading grade, reading ease, em-dash
-rate, sentence-length floor) come from a style profile:
-
-```
-node scripts/check-copy/index.mjs <file> --style long-form
-```
-
-`marketing`, `general` (default), and `long-form`. The profile moves
-only those four numbers; the checks that decide whether a draft is
-machine-shaped are identical in every profile. A genuine mismatch that
-no profile covers is a signal to extend the contract deliberately, not
-to work around a warning or error silently on a per-draft basis.
+This core ships one fixed rule set — general-audience defaults (Flesch
+Reading Ease floor of 50, Flesch-Kincaid grade ceiling of 10) — not a
+per-project voice profile. A genuine mismatch (a technical register
+that needs jargon the gate flags, a document that must stay dense) is a
+signal to extend the contract deliberately, not to work around a
+warning or error silently on a per-draft basis.
 
 ### Layout
 

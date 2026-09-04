@@ -5,19 +5,12 @@
 // a validated report to stdout, exit 1 if any error-severity violation
 // fired — a real gate the copy-writer loop cannot talk its way past.
 //
-// Usage: node index.mjs <file> [--style <profile>]
-//        cat draft.md | node index.mjs - --style long-form
-//
-// The profile selects register-dependent thresholds only (reading grade,
-// em-dash rate, sentence-length floor). The checks that decide whether a
-// draft is machine-shaped — abstraction density and AI-tell phrasing —
-// are identical in every profile, because no register makes them acceptable.
+// Usage: node index.mjs <file>
+//        cat draft.md | node index.mjs -
 
 import { readFile } from 'node:fs/promises';
 import { checkTells } from './rules/tells.mjs';
 import { checkProse } from './rules/prose.mjs';
-import { checkAbstraction } from './rules/abstraction.mjs';
-import { resolveProfile, PROFILES, DEFAULT_PROFILE } from './rules/profiles.mjs';
 import { buildReport } from './report.mjs';
 
 function countWords(text) {
@@ -37,19 +30,16 @@ async function readInput(arg) {
   return readFile(arg, 'utf8');
 }
 
-export async function checkCopy(text, { style } = {}) {
-  const profile = resolveProfile(style);
+export async function checkCopy(text) {
   const wordCount = countWords(text);
   const paragraphCount = countParagraphs(text);
 
-  const tellViolations = checkTells(text, { wordCount, profile });
-  const { violations: proseViolations, metrics: proseMetrics } = await checkProse(text, { wordCount, profile });
-  const { violations: abstractionViolations, metrics: abstractionMetrics } = checkAbstraction(text);
+  const tellViolations = checkTells(text, { wordCount });
+  const { violations: proseViolations, metrics: proseMetrics } = await checkProse(text, { wordCount });
 
-  const violations = [...tellViolations, ...proseViolations, ...abstractionViolations];
+  const violations = [...tellViolations, ...proseViolations];
 
   return buildReport(violations, {
-    profile: profile.label,
     wordCount,
     paragraphCount,
     sentenceCount: proseMetrics.sentenceCount,
@@ -57,37 +47,11 @@ export async function checkCopy(text, { style } = {}) {
     fleschKincaidGrade: proseMetrics.fleschKincaidGrade,
     passiveVoiceRatio: proseMetrics.passiveVoiceRatio,
     sentenceLengthStdDev: proseMetrics.sentenceLengthStdDev,
-    concreteNounShare: abstractionMetrics.concreteNounShare,
-    nounCount: abstractionMetrics.nounCount,
   });
 }
 
-// Minimal flag parsing — one option, and adding a dependency to read it
-// would be more machinery than the whole CLI surface justifies.
-function parseArgs(argv) {
-  const args = { file: undefined, style: undefined };
-  for (let i = 0; i < argv.length; i++) {
-    if (argv[i] === '--style') {
-      args.style = argv[++i];
-    } else if (argv[i].startsWith('--style=')) {
-      args.style = argv[i].slice('--style='.length);
-    } else if (args.file === undefined) {
-      args.file = argv[i];
-    }
-  }
-  return args;
-}
-
 async function main() {
-  const { file: arg, style } = parseArgs(process.argv.slice(2));
-
-  if (style && !PROFILES[style]) {
-    process.stderr.write(
-      `check-copy: unknown style "${style}" — known: ${Object.keys(PROFILES).join(', ')} (default: ${DEFAULT_PROFILE})\n`,
-    );
-    process.exit(2);
-  }
-
+  const arg = process.argv[2];
   const text = await readInput(arg);
 
   if (!text.trim()) {
@@ -95,7 +59,7 @@ async function main() {
     process.exit(2);
   }
 
-  const report = await checkCopy(text, { style });
+  const report = await checkCopy(text);
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   process.exit(report.pass ? 0 : 1);
 }

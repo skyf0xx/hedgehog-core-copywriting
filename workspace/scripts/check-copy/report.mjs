@@ -27,6 +27,9 @@ export const report = z.object({
   warningCount: z.number().int().min(0),
   violations: z.array(violation),
   metrics: z.object({
+    // Which format contract ran alongside the universal tells/prose pair.
+    // `prose` is the default and adds no rules of its own.
+    format: z.string().min(1).default('prose'),
     wordCount: z.number().int().min(0),
     sentenceCount: z.number().int().min(0),
     paragraphCount: z.number().int().min(0),

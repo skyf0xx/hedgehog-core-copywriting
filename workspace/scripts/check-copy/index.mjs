@@ -5,12 +5,19 @@
 // a validated report to stdout, exit 1 if any error-severity violation
 // fired — a real gate the copy-writer loop cannot talk its way past.
 //
-// Usage: node index.mjs <file>
+// Usage: node index.mjs <file> [--format <name>] [--premium]
 //        cat draft.md | node index.mjs -
+//
+// The tells and prose contracts are universal and always run. --format
+// adds the contract for the medium the copy ships into (a character
+// limit, a required structural slot, a banned compliance claim) — checks
+// the prose rules cannot make, because nothing about the sentences
+// themselves is wrong. Defaults to `prose`, which adds nothing.
 
 import { readFile } from 'node:fs/promises';
 import { checkTells } from './rules/tells.mjs';
 import { checkProse } from './rules/prose.mjs';
+import { checkFormat, FORMAT_NAMES } from './rules/formats/index.mjs';
 import { buildReport } from './report.mjs';
 
 function countWords(text) {
@@ -30,16 +37,18 @@ async function readInput(arg) {
   return readFile(arg, 'utf8');
 }
 
-export async function checkCopy(text) {
+export async function checkCopy(text, { format = 'prose', premium = false } = {}) {
   const wordCount = countWords(text);
   const paragraphCount = countParagraphs(text);
 
   const tellViolations = checkTells(text, { wordCount });
   const { violations: proseViolations, metrics: proseMetrics } = await checkProse(text, { wordCount });
+  const formatViolations = checkFormat(text, format, { premium });
 
-  const violations = [...tellViolations, ...proseViolations];
+  const violations = [...tellViolations, ...proseViolations, ...formatViolations];
 
   return buildReport(violations, {
+    format,
     wordCount,
     paragraphCount,
     sentenceCount: proseMetrics.sentenceCount,
@@ -50,16 +59,39 @@ export async function checkCopy(text) {
   });
 }
 
+function parseArgs(argv) {
+  const options = { file: undefined, format: 'prose', premium: false };
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === '--format') {
+      options.format = argv[++i];
+    } else if (arg.startsWith('--format=')) {
+      options.format = arg.slice('--format='.length);
+    } else if (arg === '--premium') {
+      options.premium = true;
+    } else if (options.file === undefined) {
+      options.file = arg;
+    }
+  }
+  return options;
+}
+
 async function main() {
-  const arg = process.argv[2];
-  const text = await readInput(arg);
+  const options = parseArgs(process.argv.slice(2));
+
+  if (!FORMAT_NAMES.includes(options.format)) {
+    process.stderr.write(`check-copy: unknown format "${options.format}" — expected one of: ${FORMAT_NAMES.join(', ')}\n`);
+    process.exit(2);
+  }
+
+  const text = await readInput(options.file);
 
   if (!text.trim()) {
     process.stderr.write('check-copy: empty input\n');
     process.exit(2);
   }
 
-  const report = await checkCopy(text);
+  const report = await checkCopy(text, { format: options.format, premium: options.premium });
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
   process.exit(report.pass ? 0 : 1);
 }

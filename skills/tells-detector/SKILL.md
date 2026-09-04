@@ -39,6 +39,11 @@ only past a per-document density threshold.
 - **`tells/negation-formula`** — "it's not just X, it's Y" and its
   variants. State the positive claim directly instead of setting up a
   contrast that adds no information.
+- **`tells/emphatic-fragment`** — a short standalone sentence built
+  from absolute vocabulary ("Nothing else is left behind.", "Every
+  time, not once.") that restates the previous claim instead of adding
+  to it. The tell is the terse fragment used as emphasis, not short
+  sentences in general. Cut it, or fold it into the sentence before it.
 - **`tells/hedge-stack`** — pairing two hedges ("could potentially,"
   "may eventually"). Pick one claim and state it; stacking hedges
   doesn't make an uncertain claim more honest, just softer.
@@ -46,10 +51,11 @@ only past a per-document density threshold.
   as," "represents a" substituted for plain "is/are." Named in
   Wikipedia's essay as a specific LLM tic; the dressed-up form adds
   syllables without adding meaning.
-- **`tells/em-dash-density`** — a document-level rate check (fires
-  above ~2 per 1000 words), not a per-instance ban. Em dashes have a
-  legitimate use; the tell is using them as the default connector
-  instead of a comma, period, or restructured sentence.
+- **`tells/em-dash`** — every em dash, at error severity, not a rate
+  check. A human reaching for a dash in running prose almost always
+  reaches for a hyphen or a comma, so the character itself is the tell
+  regardless of how often it appears. Use a comma, a period, or
+  parentheses.
 - **`tells/rule-of-three-density`** — a document-level check on "X, Y,
   and Z" triplet cascades. A rhythm device used once is fine; used
   as a reflex on every list, it reads templated.

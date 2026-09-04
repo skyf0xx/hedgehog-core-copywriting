@@ -1,0 +1,508 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  scripts/check-copy:
+    dependencies:
+      flesch:
+        specifier: ^2.0.1
+        version: 2.0.1
+      flesch-kincaid:
+        specifier: ^2.0.1
+        version: 2.0.1
+      nlcst-to-string:
+        specifier: ^4.0.0
+        version: 4.0.0
+      retext:
+        specifier: ^9.0.0
+        version: 9.0.0
+      retext-english:
+        specifier: ^5.0.0
+        version: 5.0.0
+      retext-intensify:
+        specifier: ^7.0.0
+        version: 7.0.0
+      retext-passive:
+        specifier: ^5.0.0
+        version: 5.0.0
+      retext-readability:
+        specifier: ^8.0.0
+        version: 8.0.0
+      retext-repeated-words:
+        specifier: ^5.0.0
+        version: 5.0.0
+      retext-stringify:
+        specifier: ^4.0.0
+        version: 4.0.0
+      syllable:
+        specifier: ^5.0.1
+        version: 5.0.1
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      unist-util-visit:
+        specifier: ^5.1.0
+        version: 5.1.0
+      write-good:
+        specifier: ^1.0.8
+        version: 1.0.8
+      zod:
+        specifier: ^4.5.4
+        version: 4.5.4
+
+packages:
+
+  '@types/nlcst@2.0.3':
+    resolution: {integrity: sha512-vSYNSDe6Ix3q+6Z7ri9lyWqgGhJTmzRjZRqyq15N0Z/1/UnVsno9G/N40NBijoYx2seFDIl0+B2mgAb9mezUCA==}
+
+  '@types/pluralize@0.0.29':
+    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
+
+  '@types/unist@3.0.3':
+    resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
+
+  adverb-where@0.2.6:
+    resolution: {integrity: sha512-uVazUDEPYpBSVRjEDTzO6hVXh9X/eQb+gobzDpqdzMiM1MkfGxfPtgN8YerBjAeDkoABZprsOwhSZnY4X3knnw==}
+    engines: {node: '>=6', npm: '>=5'}
+
+  array-iterate@2.0.1:
+    resolution: {integrity: sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==}
+
+  automated-readability@2.0.1:
+    resolution: {integrity: sha512-/csT54oO/8qjtqaCZoNqA0srbHv3z1YAxj0ee4UQkYC7x6lb6jU0f9LIo7DLJKHWSEI4nsvnFyy34vILDqA7xw==}
+
+  bail@2.0.2:
+    resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
+
+  coleman-liau@2.0.1:
+    resolution: {integrity: sha512-ZzleDGwOd+/0rrNHs1PI3ZIiT9M0tBynXpTJqbzSmFqIjcoJRTbzVWZZMHDsy/wte5/uSeLdMKMRHFb/BUU+tg==}
+
+  commander@2.20.3:
+    resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
+
+  dale-chall-formula@2.0.1:
+    resolution: {integrity: sha512-9A791oPeYzQIpNEx6Yo0xI5GzkqE+7+H0e+elqlfpMBXOOTzTTEY28iLO+wgjmI39idov/w5Z09cgfGQsP3TUw==}
+
+  dale-chall@2.0.1:
+    resolution: {integrity: sha512-PcTrFy9XMcnIaGa3qe8KBL+zSxqR224TDi9WZ2un4o9RAutxAjMaCrQ5BQ5QdB0CyFv/SC/Px4d7ORhaJq6T1Q==}
+
+  dequal@2.0.3:
+    resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
+    engines: {node: '>=6'}
+
+  devlop@1.1.0:
+    resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+
+  e-prime@0.10.4:
+    resolution: {integrity: sha512-tzBmM2mFSnAq5BuxPSyin6qXb3yMe1wufJN7L7ZPcEWS5S+jI2dhKQEoqHVEcSMMXo/j5lcWpX5jzA6wLSmX6w==}
+
+  extend@3.0.2:
+    resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
+
+  fillers@2.0.1:
+    resolution: {integrity: sha512-VrPqzZILeo5U0vc32VlJl0cwseV/Vpe3uRFM2e9MQy2YlG0cSCnZeJ/wsR1TBJcQKTuOSrRb5GPqRiasyKP5OQ==}
+
+  flesch-kincaid@2.0.1:
+    resolution: {integrity: sha512-uaUdpXA5tNOxLanIAHL3nQepazuDl9x+8qo6YyKYBE/8NDzJq+xZpADEe6yXra8ZYuIIIXiGiOwIWFJ5S3pBgA==}
+
+  flesch@2.0.1:
+    resolution: {integrity: sha512-bNr6zn2sjSOrgt8KINjAqWjGVx59Td8kz6Rb9JK9QmX0KYj46SS2e+7P7JaXcMOBEKr4nGuCiET7KHEhzjXtng==}
+
+  gunning-fog@2.0.1:
+    resolution: {integrity: sha512-cszyB/P2ET+MsNosEfzjNZhVVMeLKAKYV+5g5NrYPdzKzwKcpzPqlkM3D3l41qVyElT33RYX8tQTzYYX6mnmGQ==}
+
+  hedges@2.0.1:
+    resolution: {integrity: sha512-/TJb3QUphoIM/Vh2FcxR8GckKVzDRz816b5Afim5nQmZMizY6/n8/Q+8NI9XHrNgTFqDUsL6iyNk1008bGwS/g==}
+
+  is-plain-obj@4.1.0:
+    resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
+    engines: {node: '>=12'}
+
+  nlcst-is-literal@3.0.0:
+    resolution: {integrity: sha512-LRlEzrPojNGqS5J48J5spHwwhri2mPAdls8Tf1u3h6cx2XLmBKpW97gIYo+J/nPR3DyjgX3aKginSEK53OWTCA==}
+
+  nlcst-normalize@4.0.0:
+    resolution: {integrity: sha512-R7t5UaYyCB6vN/o9PKGM/kFf5exb8RDiS6cx5BC1r3wKSHFtUyAehEVwT5TXG19sAOrM6O2QxXdWM9/tPdQseA==}
+
+  nlcst-search@4.0.0:
+    resolution: {integrity: sha512-QYewpDKfNwWmIoX6NTMn75/V4KFLTI5y8Am8QfqHTLjI1yl//1WCOiTEycG6wO5qcsSQ7i13ULfOhmjVsKd7yA==}
+
+  nlcst-to-string@4.0.0:
+    resolution: {integrity: sha512-YKLBCcUYKAg0FNlOBT6aI91qFmSiFKiluk655WzPF+DDMA02qIyy8uiRqI8QXtcFpEvll12LpL5MXqEmAZ+dcA==}
+
+  no-cliches@0.3.6:
+    resolution: {integrity: sha512-3yZ1vfGKOcv0dyyhUeqA0Qa6RsQ4SfUnL6o2IWR4sVg8kdnJo48XTWbMLdtnfiZTbCUdsMttNwyJcihEdGCZBw==}
+    engines: {node: '>=16', npm: '>=8'}
+
+  normalize-strings@1.1.1:
+    resolution: {integrity: sha512-fARPRdTwmrQDLYhmeh7j/eZwrCP6WzxD6uKOdK/hT/uKACAE9AG2Bc2dgqOZLkfmmctHpfcJ9w3AQnfLgg3GYg==}
+
+  parse-english@7.0.0:
+    resolution: {integrity: sha512-mxxj3DyPdvOdiUl1okNub3wwoaaZI/Z++paDg3PH96RYvfVilS63WmQOnHlGm0S05y4g9GEjNP3pylyBsJrAwQ==}
+
+  parse-latin@7.0.0:
+    resolution: {integrity: sha512-mhHgobPPua5kZ98EF4HWiH167JWBfl4pvAIXXdbaVohtK7a6YBOy56kvhCqduqyo/f3yrHFWmqmiMg/BkBkYYQ==}
+
+  passive-voice@0.1.0:
+    resolution: {integrity: sha512-Pj9iwzXw4bKEtdugGYm92jT4tnsj+xrTSkHFEM4bn6fefqbFdZi49tZMmGIZ91aIQTyFtMUww7O2qYaZKAsDag==}
+
+  pluralize@8.0.0:
+    resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
+    engines: {node: '>=4'}
+
+  quotation@2.0.3:
+    resolution: {integrity: sha512-yEc24TEgCFLXx7D4JHJJkK4JFVtatO8fziwUxY4nB/Jbea9o9CVS3gt22mA0W7rPYAGW2fWzYDSOtD94PwOyqA==}
+
+  retext-english@5.0.0:
+    resolution: {integrity: sha512-BS4Ycj2cMbxNMcXqnM+TL+aMHM0Fzalm08fHCiHaNbBs4jx1RBbpC4oeWOptBNUf8cBTi2Qrs81b9yn/KND65A==}
+
+  retext-intensify@7.0.0:
+    resolution: {integrity: sha512-wzhhiuCXYViQbvR9AdNhCeeDf3C9ImTtjwIPCYc2EL37SfMQ94WARbKaUytJO+DWsRQLlpztwwR3JyOhGBnsag==}
+
+  retext-latin@4.0.0:
+    resolution: {integrity: sha512-hv9woG7Fy0M9IlRQloq/N6atV82NxLGveq+3H2WOi79dtIYWN8OaxogDm77f8YnVXJL2VD3bbqowu5E3EMhBYA==}
+
+  retext-passive@5.0.0:
+    resolution: {integrity: sha512-N9PpBPvE37Z5h/hvgfSIFJNB4E/iYJ9EHr848t53hbKRJkD7hWJf4D+UOIj5fxjOOO/WQKX53xLypEQxHWuCtA==}
+
+  retext-readability@8.0.0:
+    resolution: {integrity: sha512-fGxJLap12lerQnU+4746oc6jYBRmvdud1aVNzagKwX10etXV4UWuFSl8bjQCbboT5fq74ImR8Mt1UmAGSUPyhw==}
+
+  retext-repeated-words@5.0.0:
+    resolution: {integrity: sha512-PY8Zt+4Akv78OgZdwSvbN6fl2Eg3UMVz/uppEEVNO/sGUi2N1t8YOPi+F2twvlVSjOFMIPIBueceRfteSOsAWw==}
+
+  retext-stringify@4.0.0:
+    resolution: {integrity: sha512-rtfN/0o8kL1e+78+uxPTqu1Klt0yPzKuQ2BfWwwfgIUSayyzxpM1PJzkKt4V8803uB9qSy32MvI7Xep9khTpiA==}
+
+  retext@9.0.0:
+    resolution: {integrity: sha512-sbMDcpHCNjvlheSgMfEcVrZko3cDzdbe1x/e7G66dFp0Ff7Mldvi2uv6JkJQzdRcvLYE8CA8Oe8siQx8ZOgTcA==}
+
+  smog-formula@2.0.1:
+    resolution: {integrity: sha512-CuJPMBnQhWrB3AE5v6z5cEbJYdMcqnHXVgNHfWoWqYes/dU64SbX8+ZVT5L9xc5J3eLcZpKKGIi89Ti4HbdXBQ==}
+
+  spache-formula@2.0.1:
+    resolution: {integrity: sha512-lzMAusZwEU1iS9dD9PEnsve8R64/M59GhBcHsVc19bp7I+//LU9OYqlb64upr0T3/s9rgssx+x26xk8aHGgLJw==}
+
+  spache@2.0.1:
+    resolution: {integrity: sha512-MwoZvTF//ID33YVXDpY2S54NNLQM+Bb+hzYKuMhGZbfHMUSK8iFJRlJSesA29CF5owkR5Ep24gCwriHBkH/nBQ==}
+
+  syllable@5.0.1:
+    resolution: {integrity: sha512-HWtNCp6v7J8H0lrT8j1HHjfOLltRoDcC7QRFVu25p4BE52JqetXG65nqC7CsatT8WQRfY4Qvh93BWJIUxbmXFg==}
+    hasBin: true
+
+  too-wordy@0.3.6:
+    resolution: {integrity: sha512-fK4DKkEcrpBbK6uANekH37VeNAb/88qKdkqc/nBOFJpHdvXKXdA4lZRkiM6zNlow00Zp4W4/lnWyqqCaOQlg/w==}
+    engines: {node: '>=6', npm: '>=5'}
+
+  trough@2.2.0:
+    resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
+
+  unified@11.0.5:
+    resolution: {integrity: sha512-xKvGhPWw3k84Qjh8bI3ZeJjqnyadK+GEFtazSfZv/rKeTkTjOJho6mFqh2SM96iIcZokxiOpg78GazTSg8+KHA==}
+
+  unist-util-find-before@4.0.1:
+    resolution: {integrity: sha512-hfpCNqPbCOseOjHU8oBkRXM8gDQ++Ua3dN7sDYz7VJ+1alt+yd/I+ECZDhv1aqpJ1x47AHbzP/xA0jWf4omAIw==}
+
+  unist-util-is@6.0.1:
+    resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
+
+  unist-util-modify-children@4.0.0:
+    resolution: {integrity: sha512-+tdN5fGNddvsQdIzUF3Xx82CU9sMM+fA0dLgR9vOmT0oPT2jH+P1nd5lSqfCfXAw+93NhcXNY2qqvTUtE4cQkw==}
+
+  unist-util-position@5.0.0:
+    resolution: {integrity: sha512-fucsC7HjXvkB5R3kTCO7kUjRdrS0BJt3M/FPxmHMBOm8JQi2BsHAHFsy27E0EolP8rp0NzXsJ+jNPyDWvOJZPA==}
+
+  unist-util-stringify-position@4.0.0:
+    resolution: {integrity: sha512-0ASV06AAoKCDkS2+xw5RXJywruurpbC4JZSm7nr7MOt1ojAzvyyaO+UxZf18j8FCF6kmzCZKcAgN/yu2gm2XgQ==}
+
+  unist-util-visit-children@3.0.0:
+    resolution: {integrity: sha512-RgmdTfSBOg04sdPcpTSD1jzoNBjt9a80/ZCzp5cI9n1qPzLZWF9YdvWGN2zmTumP1HWhXKdUWexjy/Wy/lJ7tA==}
+
+  unist-util-visit-parents@6.0.2:
+    resolution: {integrity: sha512-goh1s1TBrqSqukSc8wrjwWhL0hiJxgA8m4kFxGlQ+8FYQ3C/m11FcTs4YYem7V664AhHVvgoQLk890Ssdsr2IQ==}
+
+  unist-util-visit@5.1.0:
+    resolution: {integrity: sha512-m+vIdyeCOpdr/QeQCu2EzxX/ohgS8KbnPDgFni4dQsfSCtpz8UqDyY5GjRru8PDKuYn7Fq19j1CQ+nJSsGKOzg==}
+
+  vfile-message@4.0.3:
+    resolution: {integrity: sha512-QTHzsGd1EhbZs4AsQ20JX1rC3cOlt/IWJruk893DfLRr57lcnOeMaWG4K0JrRta4mIJZKth2Au3mM3u03/JWKw==}
+
+  vfile@6.0.3:
+    resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
+
+  weasel-words@0.1.1:
+    resolution: {integrity: sha512-rWkTAGqs4TN6qreS06+irmFUMrQVx5KoFjD8CxMHUsAwmxw/upDcfleaEYOLsonUbornahg+VJ9xrWxp4udyJA==}
+
+  weasels@2.0.1:
+    resolution: {integrity: sha512-gRFUOte0u784vpfASyx4dQYprkWFCGQYNVx0y7wMWH90UyNJ9eXyI+C/gPuBFSEPX3r4C3574ury0ICQCiPHEg==}
+
+  write-good@1.0.8:
+    resolution: {integrity: sha512-P1Ct7+DNrOcr2JAxDZ3Q5i5sx2LSveu7iLaoUL0A+YiG0GKf0l5+9j3rwMeyh6JeTL1+HfQV1rnwEvzhNIvpFw==}
+    engines: {node: '>=6', npm: '>=5'}
+    hasBin: true
+
+  zod@4.5.4:
+    resolution: {integrity: sha512-sC95tT5iHHH9gtpj6A81kh+NEaRAUFN+qlUPDUbRfOMvNf5QCBqsb3WgvnpVtK5Y+4UfA6KqufotuTvMGiTlsA==}
+
+snapshots:
+
+  '@types/nlcst@2.0.3':
+    dependencies:
+      '@types/unist': 3.0.3
+
+  '@types/pluralize@0.0.29': {}
+
+  '@types/unist@3.0.3': {}
+
+  adverb-where@0.2.6: {}
+
+  array-iterate@2.0.1: {}
+
+  automated-readability@2.0.1: {}
+
+  bail@2.0.2: {}
+
+  coleman-liau@2.0.1: {}
+
+  commander@2.20.3: {}
+
+  dale-chall-formula@2.0.1: {}
+
+  dale-chall@2.0.1: {}
+
+  dequal@2.0.3: {}
+
+  devlop@1.1.0:
+    dependencies:
+      dequal: 2.0.3
+
+  e-prime@0.10.4: {}
+
+  extend@3.0.2: {}
+
+  fillers@2.0.1: {}
+
+  flesch-kincaid@2.0.1: {}
+
+  flesch@2.0.1: {}
+
+  gunning-fog@2.0.1: {}
+
+  hedges@2.0.1: {}
+
+  is-plain-obj@4.1.0: {}
+
+  nlcst-is-literal@3.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      '@types/unist': 3.0.3
+      nlcst-to-string: 4.0.0
+
+  nlcst-normalize@4.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      nlcst-to-string: 4.0.0
+
+  nlcst-search@4.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      nlcst-is-literal: 3.0.0
+      nlcst-normalize: 4.0.0
+      unist-util-visit: 5.1.0
+
+  nlcst-to-string@4.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+
+  no-cliches@0.3.6: {}
+
+  normalize-strings@1.1.1: {}
+
+  parse-english@7.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      nlcst-to-string: 4.0.0
+      parse-latin: 7.0.0
+      unist-util-modify-children: 4.0.0
+      unist-util-visit-children: 3.0.0
+
+  parse-latin@7.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      '@types/unist': 3.0.3
+      nlcst-to-string: 4.0.0
+      unist-util-modify-children: 4.0.0
+      unist-util-visit-children: 3.0.0
+      vfile: 6.0.3
+
+  passive-voice@0.1.0: {}
+
+  pluralize@8.0.0: {}
+
+  quotation@2.0.3: {}
+
+  retext-english@5.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      parse-english: 7.0.0
+      unified: 11.0.5
+
+  retext-intensify@7.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      fillers: 2.0.1
+      hedges: 2.0.1
+      nlcst-search: 4.0.0
+      nlcst-to-string: 4.0.0
+      quotation: 2.0.3
+      unist-util-position: 5.0.0
+      vfile: 6.0.3
+      weasels: 2.0.1
+
+  retext-latin@4.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      parse-latin: 7.0.0
+      unified: 11.0.5
+
+  retext-passive@5.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      nlcst-search: 4.0.0
+      nlcst-to-string: 4.0.0
+      unist-util-find-before: 4.0.1
+      unist-util-position: 5.0.0
+      vfile: 6.0.3
+
+  retext-readability@8.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      automated-readability: 2.0.1
+      coleman-liau: 2.0.1
+      dale-chall: 2.0.1
+      dale-chall-formula: 2.0.1
+      flesch: 2.0.1
+      gunning-fog: 2.0.1
+      nlcst-to-string: 4.0.0
+      smog-formula: 2.0.1
+      spache: 2.0.1
+      spache-formula: 2.0.1
+      syllable: 5.0.1
+      unist-util-visit: 5.1.0
+      vfile: 6.0.3
+
+  retext-repeated-words@5.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      nlcst-to-string: 4.0.0
+      unist-util-position: 5.0.0
+      unist-util-visit: 5.1.0
+      vfile: 6.0.3
+
+  retext-stringify@4.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      nlcst-to-string: 4.0.0
+      unified: 11.0.5
+
+  retext@9.0.0:
+    dependencies:
+      '@types/nlcst': 2.0.3
+      retext-latin: 4.0.0
+      retext-stringify: 4.0.0
+      unified: 11.0.5
+
+  smog-formula@2.0.1: {}
+
+  spache-formula@2.0.1: {}
+
+  spache@2.0.1: {}
+
+  syllable@5.0.1:
+    dependencies:
+      '@types/pluralize': 0.0.29
+      normalize-strings: 1.1.1
+      pluralize: 8.0.0
+
+  too-wordy@0.3.6: {}
+
+  trough@2.2.0: {}
+
+  unified@11.0.5:
+    dependencies:
+      '@types/unist': 3.0.3
+      bail: 2.0.2
+      devlop: 1.1.0
+      extend: 3.0.2
+      is-plain-obj: 4.1.0
+      trough: 2.2.0
+      vfile: 6.0.3
+
+  unist-util-find-before@4.0.1:
+    dependencies:
+      '@types/unist': 3.0.3
+      unist-util-is: 6.0.1
+
+  unist-util-is@6.0.1:
+    dependencies:
+      '@types/unist': 3.0.3
+
+  unist-util-modify-children@4.0.0:
+    dependencies:
+      '@types/unist': 3.0.3
+      array-iterate: 2.0.1
+
+  unist-util-position@5.0.0:
+    dependencies:
+      '@types/unist': 3.0.3
+
+  unist-util-stringify-position@4.0.0:
+    dependencies:
+      '@types/unist': 3.0.3
+
+  unist-util-visit-children@3.0.0:
+    dependencies:
+      '@types/unist': 3.0.3
+
+  unist-util-visit-parents@6.0.2:
+    dependencies:
+      '@types/unist': 3.0.3
+      unist-util-is: 6.0.1
+
+  unist-util-visit@5.1.0:
+    dependencies:
+      '@types/unist': 3.0.3
+      unist-util-is: 6.0.1
+      unist-util-visit-parents: 6.0.2
+
+  vfile-message@4.0.3:
+    dependencies:
+      '@types/unist': 3.0.3
+      unist-util-stringify-position: 4.0.0
+
+  vfile@6.0.3:
+    dependencies:
+      '@types/unist': 3.0.3
+      vfile-message: 4.0.3
+
+  weasel-words@0.1.1: {}
+
+  weasels@2.0.1: {}
+
+  write-good@1.0.8:
+    dependencies:
+      adverb-where: 0.2.6
+      commander: 2.20.3
+      e-prime: 0.10.4
+      no-cliches: 0.3.6
+      passive-voice: 0.1.0
+      too-wordy: 0.3.6
+      weasel-words: 0.1.1
+
+  zod@4.5.4: {}

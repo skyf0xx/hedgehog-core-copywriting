@@ -15,13 +15,12 @@ process exiting 0 or 1 is.
 
 ## Phase -1: ephemeral scratch setup (before Phase 0)
 
-Every invocation of this loop is ephemeral: fetch fresh into a hidden
-temp directory, run the whole loop there, copy only the finished piece
-back to wherever the user actually started, then discard the temp
-directory. There is no persistent, visible install of this core in the
-old sense — nothing under this core lives in the user's project
-directory except the one file the courtesy export drops there. Run
-these steps in order, before anything else in the session:
+Every invocation of this loop is ephemeral: it runs entirely in a hidden
+temp directory, and only the finished piece is copied back to wherever
+the user actually started. There is no persistent, visible install of
+this core in the old sense — nothing under this core lives in the
+user's project directory except the one file the courtesy export drops
+there. Run these steps in order, before anything else in the session:
 
 1. **Capture the user's real starting directory first, before anything
    else happens**: `ORIGDIR="$PWD"`. This ordering matters because
@@ -30,12 +29,28 @@ these steps in order, before anything else in the session:
    directory and is fully discardable, but if `$ORIGDIR` isn't captured
    before any `cd` happens, there is no way to know where the finished
    piece should ultimately land.
-2. **Create the hidden scratch directory**: `TMPDIR=$(mktemp -d)`.
-3. **The invariant**: every `hedgehog` command for the rest of this
-   loop, and every file this loop writes (`.hedgehog/copy/`,
-   `scripts/check-copy/`, the BMAD archive under `.hedgehog/BMAD/`,
-   `core.yaml`), happens inside `$TMPDIR`, never `$ORIGDIR`. Every
-   `hedgehog` invocation is wrapped as a subshell, not a bare `cd`:
+2. **Run `hedgehog init --copywriting` from `$ORIGDIR`, unwrapped**:
+   ```
+   HEDGEHOG_CORE_NO_CACHE=1 npx @skyf0xx/hedgehog init --copywriting
+   ```
+   The CLI creates the scratch directory itself and `cd`s into it before
+   installing anything — it never lands `scripts/check-copy/`,
+   `core.yaml`, or anything else under `$ORIGDIR`. **Do not** `mktemp -d`
+   or `cd` before running this: the CLI already owns that, and wrapping
+   this command inside a manually-created directory only produces a
+   second, nested scratch directory that the CLI creates inside the
+   first — the install still lands in the CLI's own directory, not the
+   one made by hand, which would make the path captured in the next step
+   wrong.
+3. **Capture the scratch path the command just printed** —
+   `(copywriting installs to a scratch directory, never here — using
+   <path>)` is the first line of output — as `$TMPDIR` for the rest of
+   this session.
+4. **The invariant from here on**: every `hedgehog` command for the
+   rest of this loop, and every file this loop writes (`.hedgehog/copy/`,
+   the BMAD archive under `.hedgehog/BMAD/`), happens inside `$TMPDIR`,
+   never `$ORIGDIR`. Every `hedgehog` invocation is wrapped as a
+   subshell, not a bare `cd`:
    ```
    (cd "$TMPDIR" && HEDGEHOG_CORE_NO_CACHE=1 HEDGEHOG_NO_COMMUNITY_PROMPT=1 hedgehog ...)
    ```
@@ -44,15 +59,6 @@ these steps in order, before anything else in the session:
    each Bash tool call is not guaranteed to persist shell state (cwd)
    from the previous one anyway — a bare `cd` would only be as reliable
    as remembering it happened.
-4. **`hedgehog init --copywriting` itself is run the same wrapped way**,
-   targeting `$TMPDIR` from `$ORIGDIR`:
-   ```
-   (cd "$TMPDIR" && HEDGEHOG_CORE_NO_CACHE=1 npx @skyf0xx/hedgehog init --copywriting)
-   ```
-   This is what triggers the CLI's existing self-init-git-if-needed
-   behavior inside the fresh temp directory — `$TMPDIR` starts empty, so
-   `init` initializes a git repo there itself, requiring no special
-   handling from this loop.
 
 Every relative path named anywhere else in this document —
 `.hedgehog/copy/...`, `scripts/check-copy/...`, `core.yaml`,

@@ -27,6 +27,7 @@ export const report = z.object({
   warningCount: z.number().int().min(0),
   violations: z.array(violation),
   metrics: z.object({
+    profile: z.string().min(1),
     wordCount: z.number().int().min(0),
     sentenceCount: z.number().int().min(0),
     paragraphCount: z.number().int().min(0),
@@ -34,6 +35,10 @@ export const report = z.object({
     fleschKincaidGrade: z.number().nullable(),
     passiveVoiceRatio: z.number().min(0).max(1),
     sentenceLengthStdDev: z.number().min(0),
+    // null below the noun-count floor, where the ratio is too noisy to
+    // report as if it meant something. See abstraction.mjs.
+    concreteNounShare: z.number().min(0).max(1).nullable(),
+    nounCount: z.number().int().min(0),
   }),
 });
 

@@ -1,6 +1,6 @@
 ---
 name: hedgehog-copywriting-loop
-description: The operating loop for the copywriting core, start to finish — planning intake (the vendored BMAD-METHOD shelf, mined into a brief), then the draft/checkCopy()/revise cycle that gates every piece of copy on a mechanical pass, not an agent's own self-report. Invoke at the start of any copy-writing session and for "what's next." Also covers this core's own planning intake.
+description: The operating loop for the copywriting core, start to finish — planning intake (the vendored BMAD-METHOD shelf, mined into a brief), then the draft/checkCopy()/revise cycle that gates every piece of copy on a mechanical pass, not an agent's own self-report. Covers the copy types (prose, ad, landing-page, direct-response, tweet) and the format contract each one gates on. Invoke at the start of any copy-writing session and for "what's next." Also covers this core's own planning intake.
 ---
 
 # Copywriting Loop
@@ -12,6 +12,44 @@ checks (`tells-detector` and `prose-quality`'s rule sets, as code) and
 returns a structured violation report. The loop exists because an
 agent's own read of its draft ("this looks clean") is not a gate; a
 process exiting 0 or 1 is.
+
+Copy that ships into a specific medium is gated on that medium's
+contract too, named by the brief's `type:` field and covered in "Copy
+types" below.
+
+## Copy types
+
+The AI-tell and prose-quality contracts are universal: they run against
+every draft, whatever it is. What differs by copy type is the medium's
+own contract, added by `--format`:
+
+| `type:` | What the format contract adds | Reference skill |
+| --- | --- | --- |
+| `prose` (default) | nothing beyond the universal pair | — |
+| `ad` | Meta's field limits (2200 primary, 40 headline, 30 description), the 125-character "See more" fold, a required CTA, and banned compliance claims | `ad-copy` |
+| `landing-page` | a required headline and CTA, proof, 500-word ceiling, 60-word mobile paragraph ceiling | `landing-page-copy` |
+| `direct-response` | a required CTA, a required number, vague-benefit claims, proof past 150 words | `direct-response-copy` |
+| `tweet` | the 280-character limit (25,000 with `--premium`), one hashtag, engagement bait, all-caps openers | `tweet-copy` |
+
+Why these are gates rather than guidance: before the format contracts
+existed, a 446-character "tweet" carrying five hashtags, a body link and
+"RT if you agree" passed this core's gate with zero errors, and so did a
+Meta ad with an 81-character headline promising readers they would "make
+money fast with zero risk". Both are rejected outright by the platforms
+they were written for. No prose rule can see either defect, because
+nothing about the sentences themselves is wrong.
+
+Three things follow, and the loop holds to all three:
+
+- **A format contract only ever adds.** None of them relaxes a universal
+  rule, so no copy type is licensed to sound more like an LLM because of
+  where it ships.
+- **The format comes from the brief, never from the draft.** The brief is
+  read-only once the draft layer starts, so a draft that reads like a
+  landing page under a `type: tweet` brief is a mismatch to raise, not a
+  flag to switch.
+- **Dropping `--format` is not a fix.** Running a tweet through the
+  `prose` contract hides the character limit rather than meeting it.
 
 ## Phase -1: ephemeral scratch setup (before Phase 0)
 
@@ -118,25 +156,44 @@ Add-ons decision on full-stack-app).
    default, since some copywriting projects do want the visual keepsake.
 2. **Mine a draft brief** from `.hedgehog/BMAD/`: what's being written
    (the concrete piece — a landing page section, a product announcement,
-   a UI microcopy string, docs prose), the audience, and the register to
-   write in, sourced from the product brief and PR-FAQ (the closest BMAD
-   artifacts to a copy brief). `00-brief.md` itself stays this thin by
+   a UI microcopy string, docs prose), its copy type, the audience, and
+   the register to write in, sourced from the product brief and PR-FAQ
+   (the closest BMAD artifacts to a copy brief). The copy type is one of
+   the `type:` values in "Copy types" above, mined from what the piece
+   actually is: a Meta ad is `ad`, a bridge or pre-sell page is
+   `landing-page`, a sales page or VSL or email sequence is
+   `direct-response`, a single post on X is `tweet`, and an article,
+   essay, or piece of documentation is `prose`. Where the piece genuinely
+   could be two of them (a short page that might be a bridge page or a
+   full sales page), ask rather than guessing: the type decides which
+   contract the draft is gated on, so a wrong guess surfaces late, as a
+   wall of format violations against copy that was never written for
+   that medium. `00-brief.md` itself stays this thin by
    design — the root the `draft` layer works from, not a copy of BMAD's
    full archive. Where the brief/PR-FAQ leaves what/audience/register
    genuinely unresolved, ask directly — don't proceed on vagueness, and
    don't invent an audience or register that wasn't stated, mined, or
    confirmed.
-3. **Write `.hedgehog/copy/00-brief.md`** — the mined what/audience/
-   register, in plain terms. This is the root the `draft` layer's
+3. **Write `.hedgehog/copy/00-brief.md`** — the mined what/type/audience/
+   register, in plain terms. The copy type goes in as a `type:` line at
+   the start of the file, on its own line, with one of the values from
+   "Copy types" above:
+   ```
+   type: tweet
+   ```
+   The `draft` layer's verify reads that line to pick the format
+   contract, so a brief with no `type:` line is gated as `prose`. This is the root the `draft` layer's
    `copy-writer` agent works from; it draws from BMAD's archive but is
    its own file, not a pointer into `.hedgehog/BMAD/`.
 4. **Confirm & Lock** — show the mined brief back in plain terms,
    alongside which BMAD skills ran and where their output lives
    (`.hedgehog/BMAD/`), before writing anything to the build graph.
-   State plainly what happens on confirmation: *"This locks in the
-   brief, adds the `copy` intent to the build graph (`hedgehog intent
-   add`), compiles it into the two-layer chain (`hedgehog plan`), and
-   commits (`chore(planning): copy brief`). The draft layer starts right
+   Show the copy type alongside the rest, and say which format contract
+   it gates on, since that is the part the user is most likely to want
+   changed before anything is locked. State plainly what happens on
+   confirmation: *"This locks in the brief, adds the `copy` intent to the
+   build graph (`hedgehog intent add`), compiles it into the two-layer
+   chain (`hedgehog plan`), and commits (`chore(planning): copy brief`). The draft layer starts right
    after — this core's workspace is already installed, so there's no
    bootstrap step to wait on. Anything wrong or missing — say so now."*
    Wait for explicit go-ahead — a revision here is just another mining
@@ -184,9 +241,11 @@ Add-ons decision on full-stack-app).
    ```
    node scripts/check-copy/index.mjs .hedgehog/copy/final.md
    ```
-3. **Read the JSON report.** `pass: false` means at least one
-   error-severity violation fired — revise and re-run, not argue with
-   the report. `pass: true` with `warningCount > 0` is a judgment call:
+3. **Read the JSON report.** `metrics.format` confirms which contract
+   ran; if it says `prose` on a draft that was meant to be a tweet, the
+   flag was dropped and the run does not count. `pass: false` means at
+   least one error-severity violation fired — revise and re-run, not
+   argue with the report. `pass: true` with `warningCount > 0` is a judgment call:
    warnings (weasel words, passive voice, low burstiness, readability
    drift) are real signal but not automatically disqualifying — weigh
    each against the brief's register before deciding whether to revise
@@ -237,6 +296,10 @@ Add-ons decision on full-stack-app).
   "delve" from a sentence that's still structurally a hedge stack is
   gaming the gate, not fixing the copy — the loop should always leave
   the draft better, not just quieter.
+- **The format contract is not optional and not swappable.** Dropping
+  `--format`, or switching it to a type the brief didn't name, turns a
+  failing draft into a passing report without changing the copy. That is
+  the same gaming move as rewording to dodge a regex, one level up.
 - **`checkCopy()`'s default thresholds are the general-audience
   contract** (see `prose-quality`'s reading-ease floor and grade
   ceiling) — this core ships one fixed rule set, not a per-project

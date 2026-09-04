@@ -62,3 +62,22 @@ test('still flags genuine hedging as a weasel word', async () => {
   const report = await checkCopy(text);
   assert.ok(report.violations.some((v) => v.rule === 'prose/weasel-word'));
 });
+
+test('flags a single em dash as an error, not just above a density threshold', async () => {
+  const text = `The team shipped the release on Tuesday — a day ahead of plan, which nobody expected given how the sprint started out rocky and uncertain.`;
+  const report = await checkCopy(text);
+  assert.equal(report.pass, false);
+  assert.ok(report.violations.some((v) => v.rule === 'tells/em-dash' && v.severity === 'error'));
+});
+
+test('flags trailing negation used for emphasis without a repeated word or second copula', async () => {
+  const text = `A script runs on every draft and decides pass or fail, keeping the gate honest across every submission we run, not the model that wrote it.`;
+  const report = await checkCopy(text);
+  assert.ok(report.violations.some((v) => v.rule === 'tells/negation-formula' && /Trailing negation/.test(v.message)));
+});
+
+test('flags a short standalone fragment that restates the prior sentence for emphasis', async () => {
+  const text = `The finished piece lands in your current folder, cleaned up and ready to publish today. Nothing else is left behind.`;
+  const report = await checkCopy(text);
+  assert.ok(report.violations.some((v) => v.rule === 'tells/emphatic-fragment'));
+});

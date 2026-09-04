@@ -6,12 +6,13 @@
 // regex — no library covers GPT-specific tells, unlike prose-quality's
 // grammar/readability checks, which lean on retext and write-good.
 //
-// Frequency, not presence, is what makes text read as AI-generated: one
-// em dash or one hedge in a long document is normal prose. Structural
-// checks (rule-of-three, em dash, sentence-length band) are counted
-// against a per-1000-word threshold rather than flagged on first
-// occurrence; vocabulary/phrase checks flag every occurrence since a
-// banned word has no legitimate frequency floor to allow for.
+// Frequency, not presence, is what makes most of these read as
+// AI-generated: one hedge stack or rule-of-three in a long document is
+// normal prose, so those structural checks count against a per-1000-word
+// threshold rather than flag on first occurrence. Vocabulary/phrase
+// checks and the em dash are the exception — flagged on every occurrence,
+// since a banned word (and, per this project's own house style, the em
+// dash itself) has no legitimate frequency floor to allow for.
 
 const BANNED_WORDS = [
   'delve', 'tapestry', 'boundaries', 'elevate', 'unleash', 'robust',
@@ -46,6 +47,22 @@ const TITLE_CASE_HEADER = /^#{1,6}\s+([A-Z][a-z]*(\s+[A-Z][a-z]*){2,})$/gm;
 const EM_DASH = /—/g;
 const NEGATION_FORMULA = /\b(?:is|are|it'?s)\s+not\s+(?:just|only)\s+[^.;]{2,60}[,—-]\s*(?:it'?s|they'?re)\s+/gi;
 const NEGATION_CONTRAST = /\b(\w+)\s+[^.;,]{2,60},\s+(?:and\s+)?not\s+\1\s+[^.;]{2,60}/gi;
+// Bare "[clause], not [phrase]." / "[clause] — not [phrase]." — the same
+// negation-as-emphasis move as NEGATION_FORMULA/NEGATION_CONTRAST, but
+// without a repeated word or a second copula holding it together. Requires
+// the negated phrase to run to the sentence-final period, since that's
+// what marks it as the emphatic last word rather than a clause that keeps
+// qualifying itself further ("..., not shorts, unless it rains" reads as
+// ordinary contrast, not the AI tell). This still risks flagging genuine
+// human contrastive sentences that happen to end there — precision over
+// recall, revisit if it over-fires in practice.
+const NEGATION_TRAILING = /[,—.]\s*[Nn]ot\s+(?:the|a|an|just|only)\s+[^.;]{2,60}\./g;
+// A short (<=6 word) sentence, standalone after a `. `/`\n`, that restates
+// or emphasizes the prior claim rather than adding new information —
+// "Nothing else is left behind.", "Every time, not once." The AI tell is
+// the terse fragment-as-emphasis shape, not short sentences generally, so
+// this only matches sentences built from absolute/emphasis vocabulary.
+const EMPHATIC_FRAGMENT = /(?:^|[.!?]\s+)((?:Nothing|Every time|Not once|Always|Never|Only|Just|Every single time)\b[^.!?]{0,40}[.!?])/g;
 const HEDGE_STACK = /\b(could|may|might)\s+(potentially|possibly|eventually|ultimately)\b/gi;
 const COPULA_AVOIDANCE = /\b(serves as|stands as|marks a|functions as|represents a)\b/gi;
 
@@ -95,6 +112,8 @@ export function checkTells(text, { wordCount }) {
   for (const [re, rule, message] of [
     [NEGATION_FORMULA, 'tells/negation-formula', 'Negation formula ("it\'s not X, it\'s Y") — state the positive claim directly'],
     [NEGATION_CONTRAST, 'tells/negation-formula', 'Negation contrast ("X because Y, not because Z") — state the positive claim directly'],
+    [NEGATION_TRAILING, 'tells/negation-formula', 'Trailing negation ("X — not Y.") used for emphasis — state the positive claim directly'],
+    [EMPHATIC_FRAGMENT, 'tells/emphatic-fragment', 'Short standalone fragment restating the prior claim for emphasis — cut it or fold it into the sentence before it'],
     [HEDGE_STACK, 'tells/hedge-stack', 'Stacked hedge ("could potentially", "may eventually") — pick one claim and state it'],
     [COPULA_AVOIDANCE, 'tells/copula-avoidance', 'Copula avoidance — plain "is/are" reads clearer than dressed-up substitutes'],
   ]) {
@@ -112,15 +131,18 @@ export function checkTells(text, { wordCount }) {
     }
   }
 
-  const emDashCount = (text.match(EM_DASH) || []).length;
-  const emDashRate = countPer1000Words(emDashCount, wordCount);
-  if (emDashRate > 2) {
+  // Zero-tolerance: humans reaching for a dash in running prose almost
+  // always reach for a hyphen or comma, not an em dash — the character
+  // itself is a tell regardless of frequency, so every occurrence flags.
+  let emDashMatch;
+  EM_DASH.lastIndex = 0;
+  while ((emDashMatch = EM_DASH.exec(text)) !== null) {
     violations.push({
-      rule: 'tells/em-dash-density',
-      grain: 'document',
-      severity: 'warning',
-      message: `Em dash used ${emDashCount} time(s) (${emDashRate.toFixed(1)}/1000 words) — a known AI tic above light, occasional use`,
-      excerpt: '',
+      rule: 'tells/em-dash',
+      grain: 'sentence',
+      severity: 'error',
+      message: 'Em dash — a known AI tic; use a comma, period, or parentheses instead',
+      excerpt: excerptAround(text, emDashMatch.index, emDashMatch[0].length),
       location: {},
     });
   }

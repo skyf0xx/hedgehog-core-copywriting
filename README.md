@@ -1,26 +1,36 @@
 # Copywriting for Hedgehog
 
-Write better copy, faster. Ask for an article, email, or landing page — it drafts it, checks it against a quality gate, and hands you a clean file.
+AI writing tools grade their own homework. This one doesn't.
+
+Ask for an article, email, or landing page. It drafts the copy, runs it through a quality gate, and hands you a clean file.
 
 ## Get started
-
-Run this command from wherever you are:
 
 ```
 npx @skyf0xx/hedgehog init --copywriting
 ```
 
-That's it. Answer a few quick questions about what you want written, and the finished piece lands as a plain file in the current folder. Nothing else is left behind — just your article, email, or landing page, ready to use.
+Answer a short set of questions, and the finished piece lands in your current folder with nothing else left behind.
 
-## What it does
+## How it works
 
-This tool drafts your copy and checks it for two things:
+```
+ask -> draft -> gate check -> clean file
+```
 
-- **No AI-sounding language.** It looks for common tell-tale phrases, hedge stacks, and patterns that make writing feel artificial.
-- **Clean prose.** It checks for readability, sentence variety, passive voice, and keeps your writing lean and clear.
+The gate checks:
 
-The checks are real — they run on every draft, so every piece that passes is actually clean copy. No shortcuts, no rubber-stamping.
+- **AI-sounding language.** Tell-tale phrases, hedge stacks, patterns that read as machine-written.
+- **Clean prose.** Readability, sentence variety, passive voice.
+
+A draft that fails gets revised and checked again, every time.
+
+## Why it's different
+
+The checks are code. A script runs on every draft and decides pass or fail, so the model that wrote the piece never grades its own work.
+
+That's why a piece that passes here reads clean by an outside measure instead of the writer's own opinion.
 
 ---
 
-For more technical details about how it works, see [ARCHITECTURE.md](ARCHITECTURE.md).
+Technical details: [ARCHITECTURE.md](ARCHITECTURE.md)

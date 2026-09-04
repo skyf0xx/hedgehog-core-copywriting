@@ -8,6 +8,15 @@
 // angles (retext-passive: grammatical pattern; write-good: phrase-level
 // heuristic) — both run, deduped by overlapping character offset so a
 // single passive clause isn't reported twice.
+//
+// Deliberately NOT a rule here: "a paragraph enumerating 2+ things reads
+// better as a list" (see prose-quality's "Enumeration reads better as a
+// list"). What distinguishes real enumeration from ordinary consecutive
+// sentences (cause/effect, elaboration, single-subject continuation) is
+// that a noun names a different member of the same set each time — a
+// semantic judgment, not a syntactic one, and outside what this file's
+// pattern-based rules can reliably make. Left as craft guidance, not a
+// gate.
 
 import { unified } from 'unified';
 import retextEnglish from 'retext-english';

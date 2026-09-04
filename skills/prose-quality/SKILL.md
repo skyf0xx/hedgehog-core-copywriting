@@ -58,6 +58,18 @@ reimplementation of syllable counting or sentence tokenization.
   "implement") removes the actor and adds length without adding
   meaning.
 
+## Enumeration reads better as a list
+
+No rule catches this mechanically, but it's the same family of defect
+as low-burstiness and nominalization density: a shape that reads as
+mechanical or dense even though no single sentence is wrong. A
+paragraph naming two or more things in a row ("...went out at 457
+characters... A Meta ad shipped with...") reads denser and more
+repetitive than the same content broken into a list or numbered
+points, especially once a reader is scanning rather than reading
+straight through. The gate won't fail a paragraph for this; rewrite
+toward the list anyway before presenting a draft.
+
 ## Errors vs. warnings
 
 Only `prose/repeated-word` is error-severity — an unambiguous defect.

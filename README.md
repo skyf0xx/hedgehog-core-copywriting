@@ -4,8 +4,8 @@
 
 <table>
 <colgroup>
-<col style="width:65%">
-<col style="width:35%">
+<col style="width:55%">
+<col style="width:45%">
 </colgroup>
 <tr>
 <th>Before (AI slop)</th>
@@ -87,7 +87,7 @@ still promise something that gets the account banned.
 Prose Engineering catches things even a human can miss.
 
 
-## Install
+## Easy to install and use
 
 Ask your agent:
 *"Install Prose Engeering, then help me write about ..."*

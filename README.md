@@ -1,10 +1,21 @@
 # PROSE Engineering for Better Copy
 
-**PROSE: Programmatic Rules for Optimized Style & Expression**
+### Programmatic Rules for Optimized Style & Expression
 
-| Before (AI slop) | After (PROSE) |
-| --- | --- |
-| In today's fast-paced content landscape, stop being your own copy editor — it's not about writing more, it's about writing smarter, so you can seamlessly unlock a workflow that empowers you to focus on what truly matters. | **Get better copy than you already have.** |
+<table>
+<colgroup>
+<col style="width:65%">
+<col style="width:35%">
+</colgroup>
+<tr>
+<th>Before (AI slop)</th>
+<th>After (PROSE)</th>
+</tr>
+<tr>
+<td>In today's fast-paced content landscape, stop being your own copy editor — it's not about writing more, it's about writing smarter, so you can seamlessly unlock a workflow that empowers you to focus on what truly matters.</td>
+<td><strong>Get better copy than you already have.</strong></td>
+</tr>
+</table>
 
 </details>
 

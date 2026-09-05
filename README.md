@@ -45,7 +45,7 @@ flowchart LR
   that read as machine-written.
 - **Does it read well?** Natural Language Processing checks for Readability, sentence variety and passive voice.
 
-### Style specific checks
+#### Style specific checks
 
 | Style | Code checks |
 | --- | --- |

@@ -1,47 +1,95 @@
-# Copywriting for Hedgehog
+# PROSE Engineering for Better Copy
 
-AI writing tools grade their own homework. This one doesn't.
+**PROSE: Programmatic Rules for Optimized Style & Expression**
 
-Ask for an article, a Meta ad, a landing page, a sales page, or a post for X. It drafts the copy, runs it through a quality gate, and hands you a clean file.
+| Before (AI slop) | After (PROSE) |
+| --- | --- |
+| In today's fast-paced content landscape, stop being your own copy editor — it's not about writing more, it's about writing smarter, so you can seamlessly unlock a workflow that empowers you to focus on what truly matters. | **Get better copy than you already have.** |
 
-## Get started
+</details>
+
+## How Prose Engineering Works
+
+Every AI copywriting tool makes the same promise: better copy.
+What they don't tell you is that the model writing is also the model
+checking itself.
+
+So YOU become the quality check. You re-read the copy, you ask for a
+revision. You read it again, on and on.
+
+**While AI can miss details, a programmatic check doesn't.**
+
+```mermaid
+flowchart LR
+    A[PROSE ENGINEERING] --> B[Tell Detection]
+    A --> C[Prose Quality]
+    B --> D[Structured report]
+    C --> D
+    D --> E{pass / fail}
+```
+
+### Every draft is checked by code:
+
+- **Does it sound human?** RegEx tests for tell-tale phrases, hedge stacks and patterns
+  that read as machine-written.
+- **Does it read well?** Natural Language Processing checks for Readability, sentence variety and passive voice.
+
+### Style specific checks
+
+| Style | Code checks |
+| --- | --- |
+| Meta ad | Character limits per field, a real call to action,  claims that can get an ad account suspended |
+| Landing page | A headline and a call to action, proof, and paragraphs short enough to read on a phone |
+| Sales page or email | A call to action, at least one specific number, and no filler benefit claims |
+| Post for X | The 280-character limit counted the way X counts it, hashtags, and engagement bait |
+
+## The Prose Engineering Loop
+
+If either check fails, the draft goes back to the AI to fix automatically,
+with no rereading on your part, and runs through the checks again until it
+passes.
+
+```mermaid
+flowchart LR
+    Draft --> Check{checkProse}
+    Check -- fail --> Fix[AI fixes it]
+    Fix --> Check
+    Check -- pass --> Publish
+```
+
+**What you read is what already passed.**
+
+## Why Prose Engineering Works
+
+Normal AI writing fails because the writer is the checker.
+
+We built the quality checks into code instead of trusting the model's
+opinion of itself. The model writes, the rules judge, and the loop fixes.
+
+It also catches what reading alone misses:
+
+- A post can be well written and
+still be 60% over the character limit.
+- An ad can be well written and
+still promise something that gets the account banned.
+
+Prose Engineering catches things even a human can miss.
+
+
+## Install
+
+Ask your agent:
+*"Install Prose Engeering, then help me write about ..."*
+
+<details>
+<summary>For your agent</summary>
 
 ```
 npx @skyf0xx/hedgehog init --copywriting
 ```
 
-Answer a short set of questions, and the finished piece lands in your current folder with nothing else left behind.
-
-## How it works
-
-```
-ask -> draft -> gate check -> clean file
-```
-
-The gate checks every draft for:
-
-- **AI-sounding language.** Tell-tale phrases, hedge stacks, patterns that read as machine-written.
-- **Clean prose.** Readability, sentence variety, passive voice.
-
-And it checks the rules of the place the copy is going:
-
-| Writing a... | It also checks |
-| --- | --- |
-| Meta ad | Character limits per field, a real call to action, and claims that get an ad account suspended |
-| Landing page | A headline and a call to action, proof, and paragraphs short enough to read on a phone |
-| Sales page or email | A call to action, at least one specific number, and no filler benefit claims |
-| Post for X | The 280-character limit counted the way X counts it, hashtags, and engagement bait |
-
-A draft that fails gets revised and checked again, every time.
-
-## Why it's different
-
-The checks are code. A script runs on every draft and decides pass or fail, so the model that wrote the piece never grades its own work.
-
-That's why a piece that passes here reads clean by an outside measure instead of the writer's own opinion.
-
-It also catches what reading alone misses. A post can be well written and still be 60% over the character limit. An ad can be well written and still promise something that gets the account banned. Those are the failures a script sees and a careful reader does not.
-
----
+Answer a short set of questions about what you're writing and who it's
+for. The finished piece (an article, a Meta ad, a landing page, a sales
+page, a post for X) lands in your current folder, already checked.
 
 Technical details: [ARCHITECTURE.md](ARCHITECTURE.md)

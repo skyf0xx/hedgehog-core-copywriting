@@ -8,8 +8,8 @@
 <col style="width:45%">
 </colgroup>
 <tr>
-<th>Before (AI slop)</th>
-<th>After (PROSE)</th>
+<th>Before (Writing skills only)</th>
+<th>After (Writing skills + PROSE)</th>
 </tr>
 <tr>
 <td>In today's fast-paced content landscape, stop being your own copy editor — it's not about writing more, it's about writing smarter, so you can seamlessly unlock a workflow that empowers you to focus on what truly matters.</td>

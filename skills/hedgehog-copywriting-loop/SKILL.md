@@ -132,22 +132,19 @@ Add-ons decision on full-stack-app).
    compressed intake depending on which `planner` routed to for this
    request (see that skill's "Compressed intake" section): state the
    BMAD attribution it states, then either run `bmad-forge-idea`,
-   `bmad-brainstorming`, `bmad-product-brief`, `bmad-prfaq`, `bmad-prd`,
-   `bmad-ux`, `bmad-deep-recon` in full, or — on an explicit "just build
-   it" choice, for a short, low-stakes piece — the batched round
+   `bmad-brainstorming`, `bmad-product-brief`, `bmad-prfaq` in full,
+   stopping there per that skill's "Full-shelf carve-out on
+   copywriting" (running `bmad-deep-recon` too where the piece
+   genuinely needs market/competitive/user-voice research, and never
+   running `bmad-prd` or `bmad-ux` — this core has no module axis and
+   no UI surface for either to attach to), or — on an explicit "just
+   build it" choice, for a short, low-stakes piece — the batched round
    compressed intake defines instead. Either way, archived to
    `.hedgehog/BMAD/` with the fixed layout and `00-manifest.md`
    attribution header that skill's Phase 0 defines. `.hedgehog/BMAD/` is
    archival and immutable once written, same as every other core —
    nothing in this core's day-to-day loop reads it live after this step
-   mines it once. On a full run, `bmad-ux`'s design-handoff output isn't
-   this core's primary input — `bmad-prd` and `bmad-prfaq` are — so
-   skipping `DESIGN.md` entirely and reducing `EXPERIENCE.md` to
-   whatever sections the brief actually gives it something to say about
-   (rarely more than a Key Flow, if any) is sanctioned behavior on this
-   core, not an improvisation to justify each time `bmad-ux` runs: this
-   core has no UI surface for that skill's Foundation/Component
-   Patterns/State Patterns spine to describe. `bmad-brainstorming`'s
+   mines it once. `bmad-brainstorming`'s
    Ideate-for-me mode defaults to auto-generating an HTML keepsake —
    unwanted work on a core whose deliverables are plain prose. A project
    that wants brainstorming sessions to stay markdown-only can set

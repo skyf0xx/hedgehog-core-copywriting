@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skyf0xx/hedgehog-core-copywriting.git"
+    "url": "git+https://github.com/skyf0xx/hedgehog-core-copywriting-prose-engineering.git"
   },
   "publishConfig": {
     "access": "public"

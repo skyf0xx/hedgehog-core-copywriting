@@ -4,7 +4,7 @@
 
 Report privately through GitHub's advisory form:
 
-**https://github.com/skyf0xx/hedgehog-core-copywriting/security/advisories/new**
+**https://github.com/skyf0xx/hedgehog-core-copywriting-prose-engineering/security/advisories/new**
 
 That channel is private between you and the maintainers, and it lets a
 fix land before the details are public.

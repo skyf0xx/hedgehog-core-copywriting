@@ -1,4 +1,4 @@
-# PROSE Engineering for Better Copy
+# PROSE Engineering for Better Copy ⭐
 
 ### Programmatic Rules for Optimized Style & Expression
 
